@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Acompanhe seu pedido</h2>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Pedido #{{ pedido.id }}</h5>
+      <ul class="list-group mb-3">
+        {% for s in pedido.historico %}
+          <li class="list-group-item{% if s == pedido.status %} active{% endif %}">{{ s }}</li>
+        {% endfor %}
+      </ul>
+      <p>Status atual: <strong>{{ pedido.status }}</strong></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
