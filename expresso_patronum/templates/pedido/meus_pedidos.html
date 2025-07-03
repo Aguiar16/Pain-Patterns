@@ -1,0 +1,398 @@
+{% extends 'base.html' %}
+
+{% block title %}Meus Pedidos - Expresso Patronum{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="magical-card text-center">
+            <h2 style="font-family: 'Cinzel', serif; color: #8B0000; font-size: 2.5rem;">
+                🔮 Meus Pedidos Mágicos 🔮
+            </h2>
+            <p style="font-size: 1.2rem; color: #3C2415; margin-top: 1rem;">
+                Acompanhe suas poções desde o caldeirão até sua mesa!
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Pedidos Ativos -->
+<div class="row mt-4">
+    <div class="col-12">
+        <h3 style="font-family: 'Cinzel', serif; color: #3C2415; margin-bottom: 1.5rem;">
+            ⚡ Pedidos em Andamento
+        </h3>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Pedido 1 - Em Preparo -->
+    <div class="col-md-6 mb-4">
+        <div class="magical-card" data-order-id="001">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 style="color: #8B0000;">Pedido #001</h5>
+                <span class="status-badge status-preparo">Em Preparo</span>
+            </div>
+            
+            <div class="order-details">
+                <h6 style="color: #3C2415;">🍺 Butterbeer Latte Personalizado</h6>
+                <ul style="list-style: none; padding-left: 0; font-size: 0.9rem; color: #666;">
+                    <li>• Leite de Aveia</li>
+                    <li>• Canela Encantada</li>
+                    <li>• Chantilly das Nuvens</li>
+                    <li>• Sem Açúcar</li>
+                </ul>
+                
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <strong style="color: #D4AF37;">Total: R$ 15,50</strong>
+                    </div>
+                    <div class="col-6 text-end">
+                        <small style="color: #666;">Pedido às 14:25</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container mt-3">
+                <div class="progress" style="height: 8px; background: #E8E0D1;">
+                    <div class="progress-bar" style="width: 50%; background: linear-gradient(90deg, #0E1A40, #1E3A8A); transition: width 0.5s ease;"></div>
+                </div>
+                <div class="d-flex justify-content-between mt-2" style="font-size: 0.8rem;">
+                    <span style="color: #FFD700;">✓ Recebido</span>
+                    <span style="color: #0E1A40;">🧙‍♂️ Em Preparo</span>
+                    <span style="color: #ccc;">Pronto</span>
+                    <span style="color: #ccc;">Entregue</span>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="magical-btn" onclick="trackOrder('001')">
+                    🔍 Rastrear Poção
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pedido 2 - Pronto -->
+    <div class="col-md-6 mb-4">
+        <div class="magical-card" data-order-id="002">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 style="color: #8B0000;">Pedido #002</h5>
+                <span class="status-badge status-pronto sparkle">Pronto</span>
+            </div>
+            
+            <div class="order-details">
+                <h6 style="color: #3C2415;">🦌 Patronus Espresso</h6>
+                <ul style="list-style: none; padding-left: 0; font-size: 0.9rem; color: #666;">
+                    <li>• Açúcar Cristal</li>
+                    <li>• Duplo</li>
+                </ul>
+                
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <strong style="color: #D4AF37;">Total: R$ 9,40</strong>
+                    </div>
+                    <div class="col-6 text-end">
+                        <small style="color: #666;">Pedido às 14:18</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container mt-3">
+                <div class="progress" style="height: 8px; background: #E8E0D1;">
+                    <div class="progress-bar" style="width: 75%; background: linear-gradient(90deg, #2D5016, #16A085); transition: width 0.5s ease;"></div>
+                </div>
+                <div class="d-flex justify-content-between mt-2" style="font-size: 0.8rem;">
+                    <span style="color: #FFD700;">✓ Recebido</span>
+                    <span style="color: #0E1A40;">✓ Em Preparo</span>
+                    <span style="color: #2D5016;">🎉 Pronto</span>
+                    <span style="color: #ccc;">Entregue</span>
+                </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <button class="magical-btn success" onclick="confirmPickup('002')">
+                    ✨ Confirmar Retirada
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Histórico de Pedidos -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 style="font-family: 'Cinzel', serif; color: #3C2415; margin-bottom: 1.5rem;">
+            📚 Histórico de Poções
+        </h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="magical-card">
+            <div class="table-responsive">
+                <table class="table table-borderless">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #D4AF37;">
+                            <th style="color: #3C2415;">Pedido</th>
+                            <th style="color: #3C2415;">Poção</th>
+                            <th style="color: #3C2415;">Data</th>
+                            <th style="color: #3C2415;">Total</th>
+                            <th style="color: #3C2415;">Status</th>
+                            <th style="color: #3C2415;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>#003</strong></td>
+                            <td>🐱 Chá da Prof. McGonagall</td>
+                            <td>01/07/2025</td>
+                            <td style="color: #D4AF37;"><strong>R$ 10,80</strong></td>
+                            <td><span class="status-badge status-entregue">Entregue</span></td>
+                            <td>
+                                <button class="btn btn-sm magical-btn" onclick="reorderItem('003')">
+                                    🔄 Repetir
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#004</strong></td>
+                            <td>🔥 Firewhiskey Coffee</td>
+                            <td>30/06/2025</td>
+                            <td style="color: #D4AF37;"><strong>R$ 15,50</strong></td>
+                            <td><span class="status-badge status-entregue">Entregue</span></td>
+                            <td>
+                                <button class="btn btn-sm magical-btn" onclick="reorderItem('004')">
+                                    🔄 Repetir
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>#005</strong></td>
+                            <td>🧚 Elixir da Felicidade</td>
+                            <td>29/06/2025</td>
+                            <td style="color: #D4AF37;"><strong>R$ 16,80</strong></td>
+                            <td><span class="status-badge status-entregue">Entregue</span></td>
+                            <td>
+                                <button class="btn btn-sm magical-btn" onclick="reorderItem('005')">
+                                    🔄 Repetir
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Área de Finalização -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="magical-card text-center" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(139, 0, 0, 0.1));">
+            <h4 style="font-family: 'Cinzel', serif; color: #8B0000;">
+                🛒 Pronto para Finalizar Seu Pedido?
+            </h4>
+            <p style="color: #3C2415; margin: 1rem 0;">
+                Escolha suas poções e finalize com os melhores descontos mágicos!
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="{% url 'menu:cardapio' %}" class="magical-btn">
+                    📜 Adicionar Mais Poções
+                </a>
+                <a href="{% url 'pedido:pagamento' %}" class="magical-btn success">
+                    💰 Finalizar Pedido
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Rastreamento -->
+<div class="modal fade" id="tracking-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: #F4F1E8; border: 2px solid #D4AF37;">
+            <div class="modal-header" style="border-color: #D4AF37;">
+                <h5 class="modal-title" style="font-family: 'Cinzel', serif; color: #8B0000;">
+                    🔮 Rastreamento da Poção
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <h6 id="tracking-order-name">🍺 Butterbeer Latte Personalizado</h6>
+                    <p style="color: #666;">Pedido #<span id="tracking-order-id">001</span></p>
+                </div>
+                
+                <div class="tracking-timeline mt-4">
+                    <div class="timeline-item completed">
+                        <div class="timeline-marker">✓</div>
+                        <div class="timeline-content">
+                            <h6>Pedido Recebido</h6>
+                            <p>Sua poção foi registrada em nosso grimório</p>
+                            <small>14:25</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item active">
+                        <div class="timeline-marker">🧙‍♂️</div>
+                        <div class="timeline-content">
+                            <h6>Em Preparo na Cozinha Mágica</h6>
+                            <p>Nossos baristas estão preparando sua poção com muito carinho</p>
+                            <small>14:27</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">🎉</div>
+                        <div class="timeline-content">
+                            <h6>Poção Pronta</h6>
+                            <p>Sua bebida estará pronta para retirada</p>
+                            <small>Em breve...</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-marker">✨</div>
+                        <div class="timeline-content">
+                            <h6>Entregue</h6>
+                            <p>Aproveite sua poção mágica!</p>
+                            <small>Aguardando...</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.tracking-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.tracking-timeline::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #D4AF37;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 2rem;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -2.5rem;
+    width: 2rem;
+    height: 2rem;
+    background: #F4F1E8;
+    border: 2px solid #D4AF37;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.timeline-item.completed .timeline-marker {
+    background: #2D5016;
+    color: white;
+    border-color: #2D5016;
+}
+
+.timeline-item.active .timeline-marker {
+    background: #0E1A40;
+    color: white;
+    border-color: #0E1A40;
+    animation: pulse 2s infinite;
+}
+
+.timeline-content h6 {
+    color: #3C2415;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-content p {
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.timeline-content small {
+    color: #999;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function trackOrder(orderId) {
+    document.getElementById('tracking-order-id').textContent = orderId;
+    const modal = new bootstrap.Modal(document.getElementById('tracking-modal'));
+    modal.show();
+    
+    showMagicalNotification('Rastreando sua poção mágica! 🔮', 'info');
+}
+
+function confirmPickup(orderId) {
+    showMagicalNotification('Poção retirada com sucesso! Aproveite! ✨', 'success');
+    
+    // Atualiza o status visual
+    const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
+    const statusBadge = orderCard.querySelector('.status-badge');
+    statusBadge.className = 'status-badge status-entregue';
+    statusBadge.textContent = 'Entregue';
+    
+    // Atualiza a barra de progresso
+    const progressBar = orderCard.querySelector('.progress-bar');
+    progressBar.style.width = '100%';
+    progressBar.style.background = 'linear-gradient(90deg, #8B0000, #E74C3C)';
+    
+    // Remove o card após alguns segundos
+    setTimeout(() => {
+        orderCard.style.opacity = '0';
+        orderCard.style.transform = 'translateY(-20px)';
+        setTimeout(() => orderCard.remove(), 500);
+    }, 3000);
+}
+
+function reorderItem(orderId) {
+    showMagicalNotification('Preparando a mesma poção deliciosa! 🧙‍♂️', 'success');
+    // Aqui seria feita a lógica para repetir o pedido
+}
+
+// Simulação de atualizações em tempo real
+setInterval(() => {
+    const activeOrders = document.querySelectorAll('.status-preparo, .status-recebido');
+    activeOrders.forEach(badge => {
+        badge.style.animation = 'pulse 0.5s ease-in-out';
+        setTimeout(() => {
+            badge.style.animation = '';
+        }, 500);
+    });
+}, 15000);
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Animação inicial dos pedidos
+    const orderCards = document.querySelectorAll('.magical-card');
+    orderCards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 200);
+        
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s ease';
+    });
+});
+</script>
+{% endblock %}

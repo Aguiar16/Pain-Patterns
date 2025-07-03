@@ -1,0 +1,677 @@
+{% extends 'base.html' %}
+
+{% block title %}Cozinha Mágica - Expresso Patronum{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="magical-card text-center">
+            <h2 style="font-family: 'Cinzel', serif; color: #8B0000; font-size: 2.5rem;">
+                🧙‍♂️ Cozinha Mágica de Hogwarts 🧙‍♂️
+            </h2>
+            <p style="font-size: 1.2rem; color: #3C2415; margin-top: 1rem;">
+                Central de controle dos baristas mágicos - Gerencie todas as poções em preparo
+            </p>
+            
+            <div class="house-colors" style="margin-top: 1rem;">
+                <span class="house-gem gryffindor sparkle"></span>
+                <span class="house-gem slytherin sparkle"></span>
+                <span class="house-gem ravenclaw sparkle"></span>
+                <span class="house-gem hufflepuff sparkle"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estatísticas Rápidas -->
+<div class="row mt-4">
+    <div class="col-md-3 mb-3">
+        <div class="magical-card text-center" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.2));">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📥</div>
+            <h5 style="color: #3C2415;">Pedidos Recebidos</h5>
+            <div style="font-size: 2rem; font-weight: bold; color: #FFD700;">3</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="magical-card text-center" style="background: linear-gradient(135deg, rgba(14, 26, 64, 0.1), rgba(14, 26, 64, 0.2));">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🧙‍♂️</div>
+            <h5 style="color: #3C2415;">Em Preparo</h5>
+            <div style="font-size: 2rem; font-weight: bold; color: #0E1A40;">2</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="magical-card text-center" style="background: linear-gradient(135deg, rgba(45, 80, 22, 0.1), rgba(45, 80, 22, 0.2));">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✅</div>
+            <h5 style="color: #3C2415;">Prontos</h5>
+            <div style="font-size: 2rem; font-weight: bold; color: #2D5016;">1</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="magical-card text-center" style="background: linear-gradient(135deg, rgba(139, 0, 0, 0.1), rgba(139, 0, 0, 0.2));">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🎉</div>
+            <h5 style="color: #3C2415;">Entregues Hoje</h5>
+            <div style="font-size: 2rem; font-weight: bold; color: #8B0000;">15</div>
+        </div>
+    </div>
+</div>
+
+<!-- Controles da Cozinha -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="magical-card">
+            <h4 style="font-family: 'Cinzel', serif; color: #8B0000; margin-bottom: 1.5rem;">
+                ⚡ Ações Rápidas
+            </h4>
+            <div class="d-grid gap-2">
+                <button class="magical-btn" onclick="refreshOrders()">
+                    🔄 Atualizar Pedidos
+                </button>
+                <button class="magical-btn" onclick="toggleSound()">
+                    🔔 Toggle Notificações Sonoras
+                </button>
+                <button class="magical-btn" onclick="viewStatistics()">
+                    📊 Ver Estatísticas do Dia
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="magical-card">
+            <h4 style="font-family: 'Cinzel', serif; color: #8B0000; margin-bottom: 1.5rem;">
+                ⏰ Tempo Médio de Preparo
+            </h4>
+            <div class="text-center">
+                <div style="font-size: 3rem; color: #D4AF37; font-weight: bold;">8:32</div>
+                <p style="color: #3C2415;">minutos por poção</p>
+                <div class="progress" style="height: 10px;">
+                    <div class="progress-bar" style="width: 75%; background: linear-gradient(90deg, #2D5016, #16A085);"></div>
+                </div>
+                <small style="color: #666;">Meta: 8-12 minutos</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fila de Pedidos -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 style="font-family: 'Cinzel', serif; color: #3C2415; margin-bottom: 1.5rem;">
+            📋 Fila de Pedidos Mágicos
+        </h3>
+    </div>
+</div>
+
+<!-- Pedidos Recebidos -->
+<div class="row">
+    <div class="col-md-4">
+        <h5 style="color: #FFD700; margin-bottom: 1rem;">📥 Recebidos</h5>
+        
+        <div class="order-queue" id="received-orders">
+            <div class="kitchen-order-card received" data-order-id="008">
+                <div class="order-header">
+                    <span class="order-number">#008</span>
+                    <span class="order-time">16:42</span>
+                </div>
+                <div class="order-content">
+                    <h6>🍺 Butterbeer Latte</h6>
+                    <p class="customer-name">Cliente: Hermione Granger</p>
+                    <ul class="ingredients">
+                        <li>• Leite de Amêndoas</li>
+                        <li>• Canela Encantada</li>
+                        <li>• Extra doce</li>
+                    </ul>
+                    <div class="order-notes">
+                        <small>📝 "Bem doce, por favor!"</small>
+                    </div>
+                </div>
+                <div class="order-actions">
+                    <button class="magical-btn success" onclick="startPreparing('008')">
+                        🧙‍♂️ Iniciar Preparo
+                    </button>
+                </div>
+            </div>
+
+            <div class="kitchen-order-card received" data-order-id="009">
+                <div class="order-header">
+                    <span class="order-number">#009</span>
+                    <span class="order-time">16:45</span>
+                </div>
+                <div class="order-content">
+                    <h6>🦌 Patronus Espresso Duplo</h6>
+                    <p class="customer-name">Cliente: Ron Weasley</p>
+                    <ul class="ingredients">
+                        <li>• Açúcar cristal</li>
+                        <li>• Extra forte</li>
+                    </ul>
+                </div>
+                <div class="order-actions">
+                    <button class="magical-btn success" onclick="startPreparing('009')">
+                        🧙‍♂️ Iniciar Preparo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h5 style="color: #0E1A40; margin-bottom: 1rem;">🧙‍♂️ Em Preparo</h5>
+        
+        <div class="order-queue" id="preparing-orders">
+            <div class="kitchen-order-card preparing" data-order-id="006">
+                <div class="order-header">
+                    <span class="order-number">#006</span>
+                    <span class="order-time">16:35</span>
+                    <span class="prep-timer">5:30</span>
+                </div>
+                <div class="order-content">
+                    <h6>🐱 Chá da Prof. McGonagall</h6>
+                    <p class="customer-name">Cliente: Neville Longbottom</p>
+                    <ul class="ingredients">
+                        <li>• Mel de abelhas mágicas</li>
+                        <li>• Limão siciliano</li>
+                    </ul>
+                </div>
+                <div class="progress mt-2 mb-2" style="height: 8px;">
+                    <div class="progress-bar progress-bar-animated" style="width: 70%; background: linear-gradient(90deg, #0E1A40, #1E3A8A);"></div>
+                </div>
+                <div class="order-actions">
+                    <button class="magical-btn" onclick="markReady('006')">
+                        ✅ Marcar como Pronto
+                    </button>
+                </div>
+            </div>
+
+            <div class="kitchen-order-card preparing" data-order-id="007">
+                <div class="order-header">
+                    <span class="order-number">#007</span>
+                    <span class="order-time">16:38</span>
+                    <span class="prep-timer">3:15</span>
+                </div>
+                <div class="order-content">
+                    <h6>🔥 Firewhiskey Coffee</h6>
+                    <p class="customer-name">Cliente: Ginny Weasley</p>
+                    <ul class="ingredients">
+                        <li>• Essência de firewhiskey</li>
+                        <li>• Pimenta encantada</li>
+                        <li>• Mel dourado</li>
+                    </ul>
+                </div>
+                <div class="progress mt-2 mb-2" style="height: 8px;">
+                    <div class="progress-bar progress-bar-animated" style="width: 45%; background: linear-gradient(90deg, #0E1A40, #1E3A8A);"></div>
+                </div>
+                <div class="order-actions">
+                    <button class="magical-btn" onclick="markReady('007')">
+                        ✅ Marcar como Pronto
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h5 style="color: #2D5016; margin-bottom: 1rem;">✅ Prontos para Retirada</h5>
+        
+        <div class="order-queue" id="ready-orders">
+            <div class="kitchen-order-card ready sparkle" data-order-id="005">
+                <div class="order-header">
+                    <span class="order-number">#005</span>
+                    <span class="order-time">16:30</span>
+                    <span class="ready-time">Pronto há 2min</span>
+                </div>
+                <div class="order-content">
+                    <h6>🧚 Elixir da Felicidade</h6>
+                    <p class="customer-name">Cliente: Luna Lovegood</p>
+                    <ul class="ingredients">
+                        <li>• Xarope de morango</li>
+                        <li>• Chantilly das nuvens</li>
+                        <li>• Polvilho dourado</li>
+                    </ul>
+                </div>
+                <div class="order-actions">
+                    <button class="magical-btn danger" onclick="markDelivered('005')">
+                        🎉 Marcar como Entregue
+                    </button>
+                    <button class="magical-btn" onclick="callCustomer('005')" style="margin-top: 0.5rem;">
+                        📢 Chamar Cliente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Log de Atividades -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="magical-card">
+            <h4 style="font-family: 'Cinzel', serif; color: #8B0000; margin-bottom: 1.5rem;">
+                📜 Log de Atividades da Cozinha
+            </h4>
+            
+            <div class="activity-log" style="max-height: 300px; overflow-y: auto;">
+                <div class="activity-item">
+                    <span class="activity-time">16:45</span>
+                    <span class="activity-text">🆕 Novo pedido recebido: #009 - Patronus Espresso (Ron Weasley)</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-time">16:42</span>
+                    <span class="activity-text">🆕 Novo pedido recebido: #008 - Butterbeer Latte (Hermione Granger)</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-time">16:40</span>
+                    <span class="activity-text">🧙‍♂️ Pedido #007 iniciado (Firewhiskey Coffee)</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-time">16:38</span>
+                    <span class="activity-text">✅ Pedido #005 finalizado e pronto para retirada</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-time">16:35</span>
+                    <span class="activity-text">🧙‍♂️ Pedido #006 iniciado (Chá da Prof. McGonagall)</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-time">16:32</span>
+                    <span class="activity-text">🎉 Pedido #004 entregue ao cliente</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Estatísticas -->
+<div class="modal fade" id="statistics-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: #F4F1E8; border: 2px solid #D4AF37;">
+            <div class="modal-header" style="border-color: #D4AF37;">
+                <h5 class="modal-title" style="font-family: 'Cinzel', serif; color: #8B0000;">
+                    📊 Estatísticas do Dia Mágico
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 style="color: #3C2415;">📈 Pedidos por Hora</h6>
+                        <div class="stats-chart" style="height: 200px; background: rgba(212, 175, 55, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2rem;">📊</div>
+                                <p>Gráfico de pedidos por hora</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 style="color: #3C2415;">🏆 Top Poções do Dia</h6>
+                        <ol style="list-style: none; padding: 0;">
+                            <li style="padding: 0.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 5px; margin-bottom: 0.5rem;">
+                                1. 🍺 Butterbeer Latte - 8 pedidos
+                            </li>
+                            <li style="padding: 0.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 5px; margin-bottom: 0.5rem;">
+                                2. 🦌 Patronus Espresso - 5 pedidos
+                            </li>
+                            <li style="padding: 0.5rem; background: rgba(212, 175, 55, 0.1); border-radius: 5px; margin-bottom: 0.5rem;">
+                                3. 🐱 Chá McGonagall - 3 pedidos
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.kitchen-order-card {
+    background: rgba(255,255,255,0.95);
+    border: 2px solid #D4AF37;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.kitchen-order-card.received {
+    border-left: 5px solid #FFD700;
+}
+
+.kitchen-order-card.preparing {
+    border-left: 5px solid #0E1A40;
+    background: rgba(14, 26, 64, 0.05);
+}
+
+.kitchen-order-card.ready {
+    border-left: 5px solid #2D5016;
+    background: rgba(45, 80, 22, 0.05);
+}
+
+.order-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.order-number {
+    font-weight: bold;
+    color: #8B0000;
+    font-size: 1.1rem;
+}
+
+.order-time, .prep-timer, .ready-time {
+    font-size: 0.9rem;
+    color: #666;
+    margin-left: auto;
+}
+
+.prep-timer {
+    color: #0E1A40;
+    font-weight: bold;
+}
+
+.ready-time {
+    color: #2D5016;
+    font-weight: bold;
+}
+
+.customer-name {
+    color: #3C2415;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.ingredients {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.ingredients li {
+    margin-bottom: 0.2rem;
+}
+
+.order-notes {
+    background: rgba(212, 175, 55, 0.1);
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin: 0.5rem 0;
+}
+
+.order-actions {
+    margin-top: 1rem;
+}
+
+.order-actions .magical-btn {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.order-queue {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.activity-log {
+    font-family: 'Courier New', monospace;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px dotted #D4AF37;
+}
+
+.activity-time {
+    color: #D4AF37;
+    font-weight: bold;
+    margin-right: 1rem;
+    min-width: 60px;
+}
+
+.activity-text {
+    color: #3C2415;
+}
+
+@keyframes notification-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.new-order {
+    animation: notification-pulse 0.5s ease-in-out 3;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let soundEnabled = true;
+
+function startPreparing(orderId) {
+    const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
+    if (orderCard) {
+        // Move para coluna "Em Preparo"
+        orderCard.className = 'kitchen-order-card preparing';
+        orderCard.querySelector('.order-actions').innerHTML = `
+            <div class="progress mt-2 mb-2" style="height: 8px;">
+                <div class="progress-bar progress-bar-animated" style="width: 0%; background: linear-gradient(90deg, #0E1A40, #1E3A8A);"></div>
+            </div>
+            <button class="magical-btn" onclick="markReady('${orderId}')">
+                ✅ Marcar como Pronto
+            </button>
+        `;
+        
+        // Adiciona timer
+        const header = orderCard.querySelector('.order-header');
+        const timer = document.createElement('span');
+        timer.className = 'prep-timer';
+        timer.textContent = '0:00';
+        header.appendChild(timer);
+        
+        // Move para coluna correta
+        document.getElementById('preparing-orders').appendChild(orderCard);
+        
+        // Inicia timer visual
+        startTimer(orderId);
+        
+        showMagicalNotification(`Preparo iniciado para pedido #${orderId}! 🧙‍♂️`, 'info');
+        addActivityLog(`🧙‍♂️ Pedido #${orderId} iniciado`);
+    }
+}
+
+function markReady(orderId) {
+    const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
+    if (orderCard) {
+        orderCard.className = 'kitchen-order-card ready sparkle';
+        orderCard.querySelector('.order-actions').innerHTML = `
+            <button class="magical-btn danger" onclick="markDelivered('${orderId}')">
+                🎉 Marcar como Entregue
+            </button>
+            <button class="magical-btn" onclick="callCustomer('${orderId}')" style="margin-top: 0.5rem;">
+                📢 Chamar Cliente
+            </button>
+        `;
+        
+        // Atualiza tempo
+        const timer = orderCard.querySelector('.prep-timer');
+        if (timer) {
+            timer.className = 'ready-time';
+            timer.textContent = 'Pronto agora';
+        }
+        
+        document.getElementById('ready-orders').appendChild(orderCard);
+        
+        showMagicalNotification(`Pedido #${orderId} está pronto! ✅`, 'success');
+        addActivityLog(`✅ Pedido #${orderId} finalizado e pronto para retirada`);
+        
+        if (soundEnabled) {
+            playNotificationSound();
+        }
+    }
+}
+
+function markDelivered(orderId) {
+    const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
+    if (orderCard) {
+        orderCard.style.opacity = '0';
+        orderCard.style.transform = 'translateY(-20px)';
+        
+        setTimeout(() => {
+            orderCard.remove();
+        }, 500);
+        
+        showMagicalNotification(`Pedido #${orderId} entregue! 🎉`, 'success');
+        addActivityLog(`🎉 Pedido #${orderId} entregue ao cliente`);
+        
+        // Atualiza estatísticas
+        updateStatistics();
+    }
+}
+
+function callCustomer(orderId) {
+    showMagicalNotification(`Cliente do pedido #${orderId} foi chamado! 📢`, 'info');
+    addActivityLog(`📢 Cliente do pedido #${orderId} foi chamado`);
+}
+
+function startTimer(orderId) {
+    let seconds = 0;
+    const timer = document.querySelector(`[data-order-id="${orderId}"] .prep-timer`);
+    const progressBar = document.querySelector(`[data-order-id="${orderId}"] .progress-bar`);
+    
+    const interval = setInterval(() => {
+        seconds++;
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        
+        if (timer) {
+            timer.textContent = `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Atualiza barra de progresso (assumindo 8 minutos como tempo total)
+        if (progressBar) {
+            const progress = Math.min((seconds / (8 * 60)) * 100, 100);
+            progressBar.style.width = `${progress}%`;
+        }
+        
+        // Para o timer se o elemento não existir mais
+        if (!document.querySelector(`[data-order-id="${orderId}"]`)) {
+            clearInterval(interval);
+        }
+    }, 1000);
+}
+
+function refreshOrders() {
+    showMagicalNotification('Atualizando pedidos... 🔄', 'info');
+    // Aqui seria feita uma chamada AJAX para buscar novos pedidos
+    
+    // Simula recebimento de novo pedido
+    setTimeout(() => {
+        addNewOrder();
+    }, 1000);
+}
+
+function addNewOrder() {
+    const newOrderId = Math.floor(Math.random() * 1000) + 100;
+    const beverages = ['🍺 Butterbeer Latte', '🦌 Patronus Espresso', '🐱 Chá McGonagall', '🔥 Firewhiskey Coffee'];
+    const customers = ['Harry Potter', 'Hermione Granger', 'Ron Weasley', 'Luna Lovegood', 'Draco Malfoy'];
+    
+    const beverage = beverages[Math.floor(Math.random() * beverages.length)];
+    const customer = customers[Math.floor(Math.random() * customers.length)];
+    const now = new Date();
+    const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    const newOrderHTML = `
+        <div class="kitchen-order-card received new-order" data-order-id="${newOrderId}">
+            <div class="order-header">
+                <span class="order-number">#${newOrderId}</span>
+                <span class="order-time">${timeString}</span>
+            </div>
+            <div class="order-content">
+                <h6>${beverage}</h6>
+                <p class="customer-name">Cliente: ${customer}</p>
+                <ul class="ingredients">
+                    <li>• Personalização padrão</li>
+                </ul>
+            </div>
+            <div class="order-actions">
+                <button class="magical-btn success" onclick="startPreparing('${newOrderId}')">
+                    🧙‍♂️ Iniciar Preparo
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('received-orders').insertAdjacentHTML('afterbegin', newOrderHTML);
+    addActivityLog(`🆕 Novo pedido recebido: #${newOrderId} - ${beverage} (${customer})`);
+    
+    if (soundEnabled) {
+        playNotificationSound();
+    }
+}
+
+function toggleSound() {
+    soundEnabled = !soundEnabled;
+    showMagicalNotification(`Notificações sonoras ${soundEnabled ? 'ativadas' : 'desativadas'}! 🔔`, 'info');
+}
+
+function viewStatistics() {
+    const modal = new bootstrap.Modal(document.getElementById('statistics-modal'));
+    modal.show();
+}
+
+function playNotificationSound() {
+    // Simula som de notificação
+    console.log('🔔 Som de notificação!');
+}
+
+function addActivityLog(message) {
+    const now = new Date();
+    const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    const logItem = document.createElement('div');
+    logItem.className = 'activity-item';
+    logItem.innerHTML = `
+        <span class="activity-time">${timeString}</span>
+        <span class="activity-text">${message}</span>
+    `;
+    
+    const activityLog = document.querySelector('.activity-log');
+    activityLog.insertBefore(logItem, activityLog.firstChild);
+}
+
+function updateStatistics() {
+    // Atualiza contadores na interface
+    const deliveredToday = document.querySelector('.col-md-3:last-child .magical-card div[style*="font-size: 2rem"]');
+    if (deliveredToday) {
+        const current = parseInt(deliveredToday.textContent);
+        deliveredToday.textContent = current + 1;
+    }
+}
+
+// Simula atualizações automáticas
+setInterval(() => {
+    if (Math.random() < 0.1) { // 10% de chance a cada verificação
+        addNewOrder();
+    }
+}, 30000); // Verifica a cada 30 segundos
+
+// Atualiza timers dos pedidos em preparo
+setInterval(() => {
+    document.querySelectorAll('.ready-time').forEach(timer => {
+        if (timer.textContent.includes('há')) {
+            const match = timer.textContent.match(/(\d+)min/);
+            if (match) {
+                const minutes = parseInt(match[1]) + 1;
+                timer.textContent = `Pronto há ${minutes}min`;
+            }
+        }
+    });
+}, 60000); // Atualiza a cada minuto
+</script>
+{% endblock %}

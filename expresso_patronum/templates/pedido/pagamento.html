@@ -1,0 +1,463 @@
+{% extends 'base.html' %}
+
+{% block title %}Pagamento Mágico - Expresso Patronum{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <!-- Resumo do Pedido -->
+        <div class="magical-card">
+            <h2 style="font-family: 'Cinzel', serif; color: #8B0000; margin-bottom: 2rem;">
+                🛒 Finalizar Pedido Mágico
+            </h2>
+            
+            <div class="order-summary-details">
+                <h5 style="color: #3C2415; margin-bottom: 1.5rem;">📝 Itens do seu Caldeirão:</h5>
+                
+                <!-- Item 1 -->
+                <div class="order-item mb-3 p-3" style="border: 1px solid #D4AF37; border-radius: 10px; background: rgba(255,255,255,0.5);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 style="color: #8B0000;">🍺 Butterbeer Latte Personalizado</h6>
+                            <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: #666;">
+                                <li>• Leite de Aveia (+R$ 1,50)</li>
+                                <li>• Canela Encantada (+R$ 1,00)</li>
+                                <li>• Chantilly das Nuvens (+R$ 2,50)</li>
+                                <li>• Sem Açúcar (-R$ 0,50)</li>
+                            </ul>
+                        </div>
+                        <div class="text-end">
+                            <div class="price" style="font-size: 1.2rem;">R$ 16,50</div>
+                            <button class="btn btn-sm" style="color: #8B0000; font-size: 0.8rem;" onclick="removeItem(1)">
+                                🗑️ Remover
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="order-item mb-3 p-3" style="border: 1px solid #D4AF37; border-radius: 10px; background: rgba(255,255,255,0.5);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 style="color: #8B0000;">🦌 Patronus Espresso</h6>
+                            <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: #666;">
+                                <li>• Açúcar Cristal (+R$ 0,50)</li>
+                                <li>• Duplo</li>
+                            </ul>
+                        </div>
+                        <div class="text-end">
+                            <div class="price" style="font-size: 1.2rem;">R$ 9,40</div>
+                            <button class="btn btn-sm" style="color: #8B0000; font-size: 0.8rem;" onclick="removeItem(2)">
+                                🗑️ Remover
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="border-color: #D4AF37; border-width: 2px;">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span style="font-size: 1.2rem; color: #3C2415;"><strong>Subtotal:</strong></span>
+                    <span style="font-size: 1.2rem; color: #D4AF37;" id="subtotal"><strong>R$ 25,90</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Métodos de Pagamento -->
+        <div class="magical-card mt-4">
+            <h4 style="font-family: 'Cinzel', serif; color: #8B0000; margin-bottom: 2rem;">
+                💰 Escolha seu Método de Pagamento Mágico
+            </h4>
+
+            <form id="payment-form">
+                <!-- Cartão Fidelidade -->
+                <div class="payment-option mb-3">
+                    <input type="radio" name="payment_method" value="fidelidade" id="fidelidade" class="payment-radio">
+                    <label for="fidelidade" class="payment-label">
+                        <div class="payment-card" style="background: linear-gradient(135deg, #2D5016, #4A7C59); color: white;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5>🎫 Cartão Fidelidade Hogwarts</h5>
+                                    <p style="margin: 0; opacity: 0.9;">Desconto exclusivo para bruxos fiéis</p>
+                                </div>
+                                <div class="text-end">
+                                    <div style="font-size: 1.5rem; font-weight: bold;">-10%</div>
+                                    <div style="font-size: 0.9rem;">R$ 23,31</div>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- PIX -->
+                <div class="payment-option mb-3">
+                    <input type="radio" name="payment_method" value="pix" id="pix" class="payment-radio">
+                    <label for="pix" class="payment-label">
+                        <div class="payment-card" style="background: linear-gradient(135deg, #0E1A40, #1E3A8A); color: white;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5>💳 PIX Mágico</h5>
+                                    <p style="margin: 0; opacity: 0.9;">Transferência instantânea com desconto</p>
+                                </div>
+                                <div class="text-end">
+                                    <div style="font-size: 1.5rem; font-weight: bold;">-5%</div>
+                                    <div style="font-size: 0.9rem;">R$ 24,61</div>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Cartão de Crédito -->
+                <div class="payment-option mb-3">
+                    <input type="radio" name="payment_method" value="cartao" id="cartao" class="payment-radio">
+                    <label for="cartao" class="payment-label">
+                        <div class="payment-card" style="background: linear-gradient(135deg, #8B0000, #A0001E); color: white;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5>💳 Cartão de Crédito/Débito</h5>
+                                    <p style="margin: 0; opacity: 0.9;">Pagamento tradicional sem desconto</p>
+                                </div>
+                                <div class="text-end">
+                                    <div style="font-size: 1.5rem; font-weight: bold;">Sem desconto</div>
+                                    <div style="font-size: 0.9rem;">R$ 25,90</div>
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </form>
+
+            <!-- Dados adicionais baseados no método escolhido -->
+            <div id="payment-details" class="mt-4" style="display: none;">
+                <!-- Detalhes do PIX -->
+                <div id="pix-details" class="payment-details" style="display: none;">
+                    <div class="magical-card" style="background: rgba(14, 26, 64, 0.1);">
+                        <h5 style="color: #0E1A40;">📱 QR Code PIX Mágico</h5>
+                        <div class="text-center">
+                            <div style="width: 200px; height: 200px; background: white; border: 2px solid #0E1A40; margin: 1rem auto; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                <div style="font-size: 4rem;">📱</div>
+                            </div>
+                            <p style="color: #3C2415;">Escaneie o QR Code com seu app bancário</p>
+                            <p style="font-size: 0.9rem; color: #666;">
+                                Chave PIX: <strong>pagamentos@expressopatronum.com.br</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalhes do Cartão -->
+                <div id="cartao-details" class="payment-details" style="display: none;">
+                    <div class="magical-card" style="background: rgba(139, 0, 0, 0.1);">
+                        <h5 style="color: #8B0000;">💳 Dados do Cartão</h5>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Número do Cartão:</label>
+                                <input type="text" class="form-control" placeholder="0000 0000 0000 0000" maxlength="19">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label">Validade:</label>
+                                <input type="text" class="form-control" placeholder="MM/AA" maxlength="5">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label">CVV:</label>
+                                <input type="text" class="form-control" placeholder="000" maxlength="3">
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Nome no Cartão:</label>
+                                <input type="text" class="form-control" placeholder="Como está impresso no cartão">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detalhes da Fidelidade -->
+                <div id="fidelidade-details" class="payment-details" style="display: none;">
+                    <div class="magical-card" style="background: rgba(45, 80, 22, 0.1);">
+                        <h5 style="color: #2D5016;">🎫 Cartão Fidelidade</h5>
+                        <div class="d-flex align-items-center">
+                            <div style="font-size: 3rem; margin-right: 1rem;">🎫</div>
+                            <div>
+                                <p style="color: #3C2415; margin: 0;">
+                                    <strong>Parabéns!</strong> Você é um cliente fiel de Hogwarts!
+                                </p>
+                                <p style="color: #666; margin: 0; font-size: 0.9rem;">
+                                    10% de desconto aplicado automaticamente
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dados Pessoais -->
+        <div class="magical-card mt-4">
+            <h4 style="font-family: 'Cinzel', serif; color: #8B0000; margin-bottom: 2rem;">
+                🧙‍♂️ Dados do Bruxo/Bruxa
+            </h4>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nome Completo:</label>
+                    <input type="text" class="form-control" value="Harry Potter" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Casa de Hogwarts:</label>
+                    <select class="form-control">
+                        <option value="gryffindor">🦁 Grifinória</option>
+                        <option value="slytherin">🐍 Sonserina</option>
+                        <option value="ravenclaw">🦅 Corvinal</option>
+                        <option value="hufflepuff">🦡 Lufa-Lufa</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Email Mágico:</label>
+                    <input type="email" class="form-control" value="harry@hogwarts.edu" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Coruja de Contato (WhatsApp):</label>
+                    <input type="tel" class="form-control" placeholder="(11) 99999-9999" required>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resumo Final -->
+    <div class="col-md-4">
+        <div class="order-summary floating" style="position: sticky; top: 2rem;">
+            <h3 style="font-family: 'Cinzel', serif; color: #8B0000; text-align: center; margin-bottom: 2rem;">
+                💰 Resumo do Pagamento
+            </h3>
+            
+            <div class="summary-line d-flex justify-content-between mb-2">
+                <span>Subtotal:</span>
+                <span>R$ 25,90</span>
+            </div>
+            
+            <div class="summary-line d-flex justify-content-between mb-2" id="discount-line" style="display: none !important;">
+                <span style="color: #2D5016;" id="discount-label">Desconto:</span>
+                <span style="color: #2D5016;" id="discount-amount">- R$ 0,00</span>
+            </div>
+
+            <hr style="border-color: #D4AF37;">
+
+            <div class="total-price" id="final-total">
+                R$ 25,90
+            </div>
+
+            <div class="payment-method-selected mt-3 mb-3" id="selected-method" style="display: none;">
+                <div class="text-center p-2" style="background: rgba(212, 175, 55, 0.1); border-radius: 10px;">
+                    <small style="color: #666;">Método Selecionado:</small>
+                    <div id="selected-method-name" style="font-weight: bold; color: #3C2415;"></div>
+                </div>
+            </div>
+
+            <button type="button" class="magical-btn success" id="finish-order-btn" 
+                    style="width: 100%; font-size: 1.2rem; padding: 1rem;" disabled>
+                ✨ Finalizar Pedido Mágico
+            </button>
+
+            <div class="mt-3 text-center">
+                <small style="color: #666;">
+                    🔒 Pagamento 100% seguro<br>
+                    Protegido por magia antiga
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação -->
+<div class="modal fade" id="confirmacao-pagamento" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background: #F4F1E8; border: 2px solid #D4AF37;">
+            <div class="modal-header" style="border-color: #D4AF37;">
+                <h5 class="modal-title" style="font-family: 'Cinzel', serif; color: #8B0000;">
+                    ✨ Pagamento Realizado com Sucesso! ✨
+                </h5>
+            </div>
+            <div class="modal-body text-center">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🎉</div>
+                <p style="font-size: 1.2rem; color: #3C2415; margin-bottom: 1rem;">
+                    Seu pedido foi confirmado e enviado para nossa cozinha mágica!
+                </p>
+                <div class="magical-card" style="background: rgba(212, 175, 55, 0.1);">
+                    <p><strong>Número do Pedido:</strong> <span id="order-number">#007</span></p>
+                    <p><strong>Tempo estimado:</strong> 8-12 minutos</p>
+                    <p><strong>Total pago:</strong> <span id="paid-amount">R$ 25,90</span></p>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-color: #D4AF37; justify-content: center;">
+                <a href="{% url 'pedido:meus_pedidos' %}" class="magical-btn success">
+                    🔮 Acompanhar Pedido
+                </a>
+                <a href="{% url 'menu:home' %}" class="magical-btn">
+                    🏠 Voltar ao Início
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.payment-option {
+    cursor: pointer;
+}
+
+.payment-radio {
+    display: none;
+}
+
+.payment-card {
+    padding: 1.5rem;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.payment-option:hover .payment-card {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.payment-radio:checked + .payment-label .payment-card {
+    border-color: #D4AF37;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.summary-line {
+    font-size: 1rem;
+    color: #3C2415;
+}
+
+.payment-details {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+    const paymentDetails = document.getElementById('payment-details');
+    const finishBtn = document.getElementById('finish-order-btn');
+    const discountLine = document.getElementById('discount-line');
+    const discountLabel = document.getElementById('discount-label');
+    const discountAmount = document.getElementById('discount-amount');
+    const finalTotal = document.getElementById('final-total');
+    const selectedMethod = document.getElementById('selected-method');
+    const selectedMethodName = document.getElementById('selected-method-name');
+
+    const basePrice = 25.90;
+
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            const method = this.value;
+            let finalPrice = basePrice;
+            let discount = 0;
+            let methodName = '';
+
+            // Esconde todos os detalhes
+            document.querySelectorAll('.payment-details').forEach(detail => {
+                detail.style.display = 'none';
+            });
+
+            // Calcula desconto e mostra detalhes específicos
+            switch(method) {
+                case 'fidelidade':
+                    discount = basePrice * 0.10;
+                    finalPrice = basePrice - discount;
+                    methodName = '🎫 Cartão Fidelidade (-10%)';
+                    document.getElementById('fidelidade-details').style.display = 'block';
+                    break;
+                case 'pix':
+                    discount = basePrice * 0.05;
+                    finalPrice = basePrice - discount;
+                    methodName = '💳 PIX Mágico (-5%)';
+                    document.getElementById('pix-details').style.display = 'block';
+                    break;
+                case 'cartao':
+                    methodName = '💳 Cartão de Crédito/Débito';
+                    document.getElementById('cartao-details').style.display = 'block';
+                    break;
+            }
+
+            // Atualiza interface
+            if (discount > 0) {
+                discountLine.style.display = 'flex';
+                discountLabel.textContent = 'Desconto:';
+                discountAmount.textContent = `- R$ ${discount.toFixed(2)}`;
+            } else {
+                discountLine.style.display = 'none';
+            }
+
+            finalTotal.textContent = `R$ ${finalPrice.toFixed(2)}`;
+            selectedMethodName.textContent = methodName;
+            selectedMethod.style.display = 'block';
+            paymentDetails.style.display = 'block';
+            finishBtn.disabled = false;
+
+            // Efeito mágico no preço
+            finalTotal.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                finalTotal.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+
+    // Finalizar pedido
+    finishBtn.addEventListener('click', function() {
+        const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
+        if (selectedPayment) {
+            // Simula processamento
+            this.disabled = true;
+            this.innerHTML = '⏳ Processando Magia...';
+            
+            setTimeout(() => {
+                document.getElementById('paid-amount').textContent = finalTotal.textContent;
+                const modal = new bootstrap.Modal(document.getElementById('confirmacao-pagamento'));
+                modal.show();
+                
+                showMagicalNotification('Pagamento realizado com sucesso! 🎉', 'success');
+            }, 2000);
+        }
+    });
+
+    // Formatação de cartão
+    const cardNumberInput = document.querySelector('input[placeholder="0000 0000 0000 0000"]');
+    if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', function() {
+            let value = this.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            this.value = formattedValue;
+        });
+    }
+
+    // Formatação de validade
+    const validityInput = document.querySelector('input[placeholder="MM/AA"]');
+    if (validityInput) {
+        validityInput.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0,2) + '/' + value.substring(2,4);
+            }
+            this.value = value;
+        });
+    }
+});
+
+function removeItem(itemId) {
+    showMagicalNotification('Item removido do caldeirão! 🗑️', 'info');
+    // Aqui seria a lógica para remover o item
+}
+</script>
+{% endblock %}

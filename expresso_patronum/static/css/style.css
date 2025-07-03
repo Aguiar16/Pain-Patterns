@@ -1,0 +1,329 @@
+/* Estilo Harry Potter para Expresso Patronum */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+    --gryffindor-gold: #D4AF37;
+    --gryffindor-red: #8B0000;
+    --slytherin-green: #2D5016;
+    --ravenclaw-blue: #0E1A40;
+    --hufflepuff-yellow: #FFD700;
+    --magic-purple: #4B0082;
+    --parchment: #F4F1E8;
+    --dark-brown: #3C2415;
+    --bronze: #CD7F32;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Crimson Text', serif;
+    background: linear-gradient(135deg, var(--parchment) 0%, #E8E0D1 100%);
+    color: var(--dark-brown);
+    min-height: 100vh;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(75, 0, 130, 0.1) 0%, transparent 50%);
+}
+
+.magical-header {
+    background: linear-gradient(135deg, var(--gryffindor-red) 0%, var(--dark-brown) 100%);
+    color: var(--gryffindor-gold);
+    padding: 2rem 0;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.magical-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D4AF37' fill-opacity='0.1'%3E%3Cpath d='M20 20l10-10v10z'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.3;
+}
+
+.magical-header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 1;
+}
+
+.magical-header .subtitle {
+    font-style: italic;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.magical-card {
+    background: rgba(244, 241, 232, 0.95);
+    border: 2px solid var(--bronze);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+    box-shadow: 
+        0 8px 32px rgba(0,0,0,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.magical-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 12px 40px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+.magical-btn {
+    background: linear-gradient(135deg, var(--gryffindor-gold) 0%, var(--bronze) 100%);
+    color: var(--dark-brown);
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.magical-btn:hover {
+    background: linear-gradient(135deg, var(--bronze) 0%, var(--gryffindor-gold) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.magical-btn.danger {
+    background: linear-gradient(135deg, var(--gryffindor-red) 0%, #A0001E 100%);
+    color: white;
+}
+
+.magical-btn.success {
+    background: linear-gradient(135deg, var(--slytherin-green) 0%, #4A7C59 100%);
+    color: white;
+}
+
+.house-colors {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+.house-gem {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.gryffindor { background: var(--gryffindor-red); }
+.slytherin { background: var(--slytherin-green); }
+.ravenclaw { background: var(--ravenclaw-blue); }
+.hufflepuff { background: var(--hufflepuff-yellow); }
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-recebido {
+    background: linear-gradient(135deg, var(--hufflepuff-yellow), #FFE55C);
+    color: var(--dark-brown);
+}
+
+.status-preparo {
+    background: linear-gradient(135deg, var(--ravenclaw-blue), #1E3A8A);
+    color: white;
+}
+
+.status-pronto {
+    background: linear-gradient(135deg, var(--slytherin-green), #16A085);
+    color: white;
+}
+
+.status-entregue {
+    background: linear-gradient(135deg, var(--gryffindor-red), #E74C3C);
+    color: white;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.beverage-card {
+    background: rgba(255,255,255,0.9);
+    border: 2px solid var(--bronze);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.beverage-card::before {
+    content: '✨';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    opacity: 0.5;
+}
+
+.beverage-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+}
+
+.beverage-card h3 {
+    font-family: 'Cinzel', serif;
+    color: var(--gryffindor-red);
+    margin-bottom: 1rem;
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gryffindor-gold);
+    margin: 1rem 0;
+}
+
+.ingredients-list {
+    list-style: none;
+    margin: 1rem 0;
+}
+
+.ingredients-list li {
+    padding: 0.3rem 0;
+    border-bottom: 1px dotted var(--bronze);
+}
+
+.ingredients-list li:last-child {
+    border-bottom: none;
+}
+
+.form-group {
+    margin: 1.5rem 0;
+}
+
+.form-group label {
+    display: block;
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    color: var(--dark-brown);
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--bronze);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.9);
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--gryffindor-gold);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+.order-summary {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(139, 0, 0, 0.1));
+    border: 2px solid var(--gryffindor-gold);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.total-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gryffindor-red);
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.magical-footer {
+    background: var(--dark-brown);
+    color: var(--gryffindor-gold);
+    text-align: center;
+    padding: 2rem;
+    margin-top: 4rem;
+}
+
+.sparkle {
+    animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+.floating {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .magical-header h1 {
+        font-size: 2rem;
+    }
+    
+    .container {
+        padding: 1rem;
+    }
+    
+    .menu-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .magical-card {
+        padding: 1rem;
+    }
+}

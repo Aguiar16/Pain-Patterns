@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Bem-vindo ao Expresso Patronum{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Hero Section -->
+        <div class="magical-card text-center" style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(139, 0, 0, 0.1)); margin-top: 2rem;">
+            <h2 style="font-family: 'Cinzel', serif; color: #8B0000; font-size: 2.5rem; margin-bottom: 1rem;">
+                🏰 Bem-vindos ao Expresso Patronum! 🏰
+            </h2>
+            <p style="font-size: 1.3rem; color: #3C2415; margin-bottom: 2rem;">
+                O café mais mágico do mundo bruxo está aqui! Prepare-se para experimentar poções deliciosas 
+                que farão seu paladar voar em uma vassoura encantada.
+            </p>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-4 mb-3">
+                    <div class="magical-card floating" style="background: rgba(255,255,255,0.9);">
+                        <h4 style="color: #8B0000;">🧙‍♂️ Poções Especiais</h4>
+                        <p>Bebidas mágicas personalizáveis com ingredientes encantados</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="magical-card floating" style="background: rgba(255,255,255,0.9); animation-delay: 0.5s;">
+                        <h4 style="color: #2D5016;">🔮 Acompanhamento em Tempo Real</h4>
+                        <p>Veja sua poção sendo preparada na cozinha mágica</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="magical-card floating" style="background: rgba(255,255,255,0.9); animation-delay: 1s;">
+                        <h4 style="color: #0E1A40;">💰 Descontos Encantados</h4>
+                        <p>Cartão fidelidade e pagamentos mágicos com vantagens especiais</p>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="{% url 'menu:cardapio' %}" class="magical-btn" style="font-size: 1.2rem; padding: 1rem 2.5rem;">
+                🍯 Explorar Cardápio Mágico 🍯
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Seção de Destaque -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 style="font-family: 'Cinzel', serif; text-align: center; color: #8B0000; margin-bottom: 2rem;">
+            🌟 Poções em Destaque 🌟
+        </h3>
+    </div>
+</div>
+
+<div class="menu-grid">
+    <!-- Butterbeer Latte -->
+    <div class="beverage-card">
+        <h3>🍺 Butterbeer Latte</h3>
+        <p style="color: #3C2415; margin: 1rem 0;">
+            Nossa versão do famoso Butterbeer, mas em formato de café cremoso e doce, 
+            com notas de caramelo e especiarias mágicas.
+        </p>
+        <div class="price">R$ 12,50</div>
+        <a href="{% url 'menu:personalizar' 'butterbeer' %}" class="magical-btn">
+            ✨ Personalizar Poção
+        </a>
+    </div>
+    
+    <!-- Patronus Espresso -->
+    <div class="beverage-card">
+        <h3>🦌 Patronus Espresso</h3>
+        <p style="color: #3C2415; margin: 1rem 0;">
+            Um espresso forte e mágico que desperta sua energia interior, 
+            servido com uma pitada de açúcar cristalizado encantado.
+        </p>
+        <div class="price">R$ 8,90</div>
+        <a href="{% url 'menu:personalizar' 'patronus' %}" class="magical-btn">
+            ⚡ Personalizar Poção
+        </a>
+    </div>
+    
+    <!-- Chá da Professora McGonagall -->
+    <div class="beverage-card">
+        <h3>🐱 Chá da Prof. McGonagall</h3>
+        <p style="color: #3C2415; margin: 1rem 0;">
+            Um chá refinado e elegante com blend de ervas especiais, 
+            perfeito para momentos de tranquilidade e concentração.
+        </p>
+        <div class="price">R$ 9,80</div>
+        <a href="{% url 'menu:personalizar' 'mcgonagall' %}" class="magical-btn">
+            🎩 Personalizar Poção
+        </a>
+    </div>
+</div>
+
+<!-- Seção de Processo Mágico -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="magical-card">
+            <h3 style="font-family: 'Cinzel', serif; text-align: center; color: #8B0000; margin-bottom: 2rem;">
+                🪄 Como Funciona a Magia? 🪄
+            </h3>
+            
+            <div class="row">
+                <div class="col-md-3 text-center mb-3">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">📜</div>
+                    <h5 style="color: #3C2415;">1. Escolha sua Poção</h5>
+                    <p>Navegue pelo nosso cardápio mágico e escolha sua bebida base favorita.</p>
+                </div>
+                <div class="col-md-3 text-center mb-3">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">⚗️</div>
+                    <h5 style="color: #3C2415;">2. Personalize</h5>
+                    <p>Adicione ingredientes mágicos para criar sua poção perfeita.</p>
+                </div>
+                <div class="col-md-3 text-center mb-3">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">💳</div>
+                    <h5 style="color: #3C2415;">3. Escolha o Pagamento</h5>
+                    <p>Ganhe descontos especiais com cartão fidelidade ou pix mágico.</p>
+                </div>
+                <div class="col-md-3 text-center mb-3">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🧙‍♂️</div>
+                    <h5 style="color: #3C2415;">4. Acompanhe a Magia</h5>
+                    <p>Veja em tempo real sua poção sendo preparada na cozinha.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Citação Motivacional -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="magical-card text-center" style="background: linear-gradient(135deg, rgba(75, 0, 130, 0.1), rgba(212, 175, 55, 0.1));">
+            <h4 style="font-family: 'Cinzel', serif; color: #4B0082; font-style: italic;">
+                "It does not do to dwell on dreams and forget to live... but a good coffee always helps!"
+            </h4>
+            <p style="color: #3C2415; margin-top: 1rem;">
+                - Albus Dumbledore (adaptado para cafeteria)
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Adiciona efeito especial aos cards de destaque
+    const beverageCards = document.querySelectorAll('.beverage-card');
+    beverageCards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 200);
+        
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.6s ease';
+    });
+});
+</script>
+{% endblock %}
