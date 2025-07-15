@@ -262,26 +262,44 @@ def adicionar_ao_carrinho(request):
             if 'carrinho' not in request.session:
                 request.session['carrinho'] = []
 
+            # Preparar lista de ingredientes com nomes
+            ingredientes_nomes = []
+            if leite_id and leite_id != 'tradicional':
+                leite = Ingrediente.objects.get(id=leite_id)
+                ingredientes_nomes.append(f"🥛 {leite.nome}")
+            
+            if acucar_id and acucar_id != 'normal':
+                acucar = Ingrediente.objects.get(id=acucar_id)
+                ingredientes_nomes.append(f"🍯 {acucar.nome}")
+            
+            for ingrediente_id in ingredientes_ids:
+                ingrediente = Ingrediente.objects.get(id=ingrediente_id)
+                ingredientes_nomes.append(f"✨ {ingrediente.nome}")
+
+            # Preparar descrição completa
+            descricao_base = f"Baseado em {bebida_base.nome}"
+            if ingredientes_nomes:
+                descricao_completa = f"{descricao_base} com {', '.join(ingredientes_nomes)}"
+            else:
+                descricao_completa = f"{descricao_base} (versão tradicional)"
+
             item_carrinho = {
                 'id': len(request.session['carrinho']) + 1,
                 'bebida_nome': bebida_nome,
                 'bebida_base_preco': float(bebida_base.preco),
-                'descricao_completa': bebida_personalizada.descricao(),
+                'descricao_completa': descricao_completa,
                 'preco_total': float(bebida_personalizada.get_preco()),
-                'ingredientes': [ing.nome for ing in bebida_personalizada.ingredientes],
-                'observacoes': observacoes
+                'ingredientes': ingredientes_nomes,
+                'observacoes': observacoes,
+                'personalizada': True,
+                'timestamp': request.POST.get('timestamp', '')
             }
 
             request.session['carrinho'].append(item_carrinho)
             request.session.modified = True
 
-            # Adicionar pedido ao banco de dados (área Meus Pedidos)
-            from pedido.commands import FazerPedidoCommand
-            from pedido.models import PedidoBO
-            cliente_nome = request.user.username if request.user.is_authenticated else 'Visitante'
-            # Executa o comando para criar o pedido
-            comando = FazerPedidoCommand(cliente_nome, bebida_personalizada, observacoes)
-            comando.executar()
+            # Não salvamos no histórico aqui - apenas quando o pedido for finalizado (pagamento)
+            # O carrinho é mantido apenas na sessão/localStorage até o pagamento
 
             return JsonResponse({
                 'success': True,

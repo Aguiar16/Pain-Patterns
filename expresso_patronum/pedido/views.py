@@ -9,39 +9,11 @@ from .commands import FazerPedidoCommand, CancelarPedidoCommand, AlterarPedidoCo
 invoker_pedidos = InvokerPedidos()
 
 def meus_pedidos(request):
-    """Exibe os pedidos do cliente com acompanhamento de status"""
-    # Obter pedidos reais do banco de dados
-    todos_pedidos = Pedido.objects.all().order_by('-criado_em')
-    
-    # Separar pedidos ativos dos finalizados
-    pedidos_ativos = []
-    historico = []
-    
-    for pedido in todos_pedidos:
-        pedido_data = {
-            'id': str(pedido.id).zfill(3),
-            'bebida': pedido.bebida,
-            'preco': float(pedido.preco),
-            'status': pedido.status,
-            'horario': pedido.criado_em.strftime('%H:%M'),
-            'data': pedido.criado_em.strftime('%d/%m/%Y'),
-        }
-        
-        if pedido.status in ['Recebido', 'Em preparo', 'Pronto']:
-            # Calcular progresso baseado no status
-            progresso_map = {
-                'Recebido': 25,
-                'Em preparo': 50,
-                'Pronto': 75
-            }
-            pedido_data['progresso'] = progresso_map.get(pedido.status, 25)
-            pedidos_ativos.append(pedido_data)
-        else:
-            historico.append(pedido_data)
-    
+    """Exibe o carrinho do cliente (localStorage) - não mostra histórico de pedidos pagos"""
+    # Esta página agora funciona apenas como carrinho
+    # O histórico de pedidos pagos será exibido em uma página separada
     context = {
-        'pedidos_ativos': pedidos_ativos,
-        'historico': historico,
+        'carrinho_apenas': True,  # Flag para indicar que é apenas carrinho
     }
     return render(request, 'pedido/meus_pedidos.html', context)
 
@@ -49,18 +21,6 @@ def pagamento(request):
     """Página de finalização do pedido com aplicação de descontos (Strategy)"""
     # Obter itens do carrinho da sessão
     itens_carrinho = request.session.get('carrinho', [])
-    
-    # Se carrinho vazio, adicionar itens de exemplo
-    if not itens_carrinho:
-        itens_carrinho = [
-            {
-                'id': 1,
-                'bebida_nome': '🍺 Butterbeer Latte Personalizado',
-                'descricao_completa': '🍺 Butterbeer Latte com Leite de Aveia, Canela Encantada, Chantilly das Nuvens',
-                'preco_total': 16.50,
-                'ingredientes': ['Leite de Aveia (+R$ 1,50)', 'Canela Encantada (+R$ 1,00)', 'Chantilly das Nuvens (+R$ 2,50)', 'Sem Açúcar (-R$ 0,50)']
-            }
-        ]
     
     subtotal = sum(float(item['preco_total']) for item in itens_carrinho)
     
@@ -130,7 +90,8 @@ def processar_pagamento(request):
                 'numero_pedido': numero_pedido,
                 'valor_final': sum(float(p.preco) for p in pedidos_criados),
                 'message': 'Pagamento processado com sucesso!',
-                'pedidos_criados': len(pedidos_criados)
+                'pedidos_criados': len(pedidos_criados),
+                'redirect_url': '/cliente/historico/'  # Redirecionar para histórico
             })
             
         except Exception as e:
@@ -321,3 +282,86 @@ def api_historico_comandos(request):
         'success': True,
         'historico': historico
     })
+
+def salvar_pedidos_localstorage(request):
+    """API para salvar pedidos do localStorage no banco após pagamento bem-sucedido"""
+    if request.method == 'POST':
+        try:
+            import json
+            data = json.loads(request.body)
+            pedidos_localStorage = data.get('pedidos', [])
+            cliente_nome = data.get('cliente', 'Cliente Anônimo')
+            
+            if not pedidos_localStorage:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Nenhum pedido para salvar'
+                })
+            
+            pedidos_salvos = []
+            
+            for item in pedidos_localStorage:
+                # Criar pedido no banco
+                pedido = Pedido.objects.create(
+                    cliente=cliente_nome,
+                    bebida=item.get('bebida', 'Bebida Personalizada'),
+                    preco=float(item.get('preco', 0)) * int(item.get('quantidade', 1)),
+                    observacoes=item.get('observacoes', ''),
+                    status='Recebido'
+                )
+                
+                pedidos_salvos.append({
+                    'id': pedido.id,
+                    'bebida': pedido.bebida,
+                    'preco': float(pedido.preco),
+                    'status': pedido.status
+                })
+            
+            return JsonResponse({
+                'success': True,
+                'message': f'{len(pedidos_salvos)} pedido(s) salvo(s) no histórico',
+                'pedidos': pedidos_salvos
+            })
+            
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'message': f'Erro ao salvar pedidos: {str(e)}'
+            })
+    
+    return JsonResponse({'success': False, 'message': 'Método não permitido'})
+
+def historico_pedidos(request):
+    """Página dedicada ao histórico de pedidos pagos"""
+    # Buscar apenas pedidos salvos no banco (após pagamento)
+    pedidos_historico = Pedido.objects.all().order_by('-criado_em')
+    
+    historico_data = []
+    for pedido in pedidos_historico:
+        # Tenta extrair ingredientes da descrição
+        descricao = pedido.bebida
+        ingredientes = []
+        if 'com ' in descricao:
+            partes = descricao.split('com ', 1)
+            bebida_base = partes[0].strip()
+            ingredientes_str = partes[1].strip()
+            ingredientes = [i.strip() for i in ingredientes_str.split(',')]
+        else:
+            bebida_base = descricao.strip()
+        historico_data.append({
+            'id': str(pedido.id).zfill(3),
+            'bebida': bebida_base,
+            'ingredientes': ingredientes,
+            'preco': float(pedido.preco),
+            'status': pedido.status,
+            'horario': pedido.criado_em.strftime('%H:%M'),
+            'data': pedido.criado_em.strftime('%d/%m/%Y'),
+            'data_completa': pedido.criado_em.strftime('%d/%m/%Y às %H:%M'),
+            'observacoes': pedido.observacoes or ''
+        })
+    
+    context = {
+        'historico': historico_data,
+        'total_pedidos': len(historico_data)
+    }
+    return render(request, 'pedido/historico_pedidos.html', context)

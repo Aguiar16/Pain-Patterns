@@ -5,8 +5,10 @@ app_name = 'pedido'
 
 urlpatterns = [
     path('', views.meus_pedidos, name='meus_pedidos'),
+    path('historico/', views.historico_pedidos, name='historico_pedidos'),
     path('pagamento/', views.pagamento, name='pagamento'),
     path('api/processar-pagamento/', views.processar_pagamento, name='processar_pagamento'),
+    path('api/salvar-pedidos-localstorage/', views.salvar_pedidos_localstorage, name='salvar_pedidos_localstorage'),
     path('api/avancar-status/<int:pedido_id>/', views.avancar_status, name='avancar_status'),
     path('api/rastrear/<str:pedido_id>/', views.rastrear_pedido, name='rastrear_pedido'),
     

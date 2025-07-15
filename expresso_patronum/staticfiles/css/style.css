@@ -19,6 +19,48 @@
     margin-left: 2px;
     line-height: 1.2;
 }
+
+/* Estilos para dropdown menu - garantir que apareça acima da magical-card */
+.navbar {
+    position: relative;
+    z-index: 1040;
+}
+
+.navbar-nav .dropdown {
+    position: relative;
+    z-index: 1050;
+}
+
+.navbar-nav .dropdown-menu {
+    position: absolute;
+    z-index: 1050;
+    background: rgba(244, 241, 232, 0.98);
+    border: 2px solid var(--bronze);
+    border-radius: 10px;
+    box-shadow: 
+        0 8px 32px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+    backdrop-filter: blur(15px);
+    margin-top: 0.5rem;
+}
+
+.navbar-nav .dropdown-item {
+    color: var(--dark-brown);
+    font-family: 'Crimson Text', serif;
+    padding: 0.75rem 1.25rem;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-nav .dropdown-item:hover {
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--dark-brown);
+}
+
+.navbar-nav .dropdown-divider {
+    border-color: var(--bronze);
+    opacity: 0.5;
+}
+
 /* Estilo Harry Potter para Expresso Patronum */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 
@@ -106,6 +148,8 @@ body {
         inset 0 1px 0 rgba(255,255,255,0.4);
     backdrop-filter: blur(10px);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .magical-card:hover {
@@ -329,188 +373,6 @@ body {
     50% { transform: translateY(-10px); }
 }
 
-/* Estilos para Dropdown do Menu de Navegação */
-.navbar .dropdown-menu {
-    background: linear-gradient(135deg, var(--parchment) 0%, #F0E6D2 100%);
-    border: 2px solid var(--gryffindor-gold);
-    border-radius: 15px;
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.3),
-        0 0 20px rgba(212, 175, 55, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4);
-    min-width: 220px;
-    padding: 0.75rem 0;
-    margin-top: 0.5rem;
-    backdrop-filter: blur(10px);
-    animation: dropdownFadeIn 0.3s ease;
-    z-index: 9999 !important;
-    position: absolute !important;
-    font-family: 'Cinzel', serif;
-    background-image: 
-        radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(75, 0, 130, 0.05) 0%, transparent 50%);
-}
-
-@keyframes dropdownFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.navbar .dropdown-item {
-    font-family: 'Cinzel', serif;
-    color: var(--dark-brown);
-    padding: 0.85rem 1.75rem;
-    font-size: 1rem;
-    font-weight: 500;
-    border: none;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    position: relative;
-    background: transparent;
-    border-left: 3px solid transparent;
-}
-
-.navbar .dropdown-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 0;
-    background: linear-gradient(135deg, var(--gryffindor-gold) 0%, #FFD700 100%);
-    transition: width 0.3s ease;
-    z-index: -1;
-}
-
-.navbar .dropdown-item:hover,
-.navbar .dropdown-item:focus {
-    background: transparent;
-    color: var(--dark-brown);
-    transform: translateX(8px);
-    border-left-color: var(--gryffindor-gold);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.navbar .dropdown-item:hover::before {
-    width: 100%;
-}
-
-.navbar .dropdown-item i {
-    width: 18px;
-    text-align: center;
-    font-size: 1rem;
-    color: var(--gryffindor-gold);
-    transition: all 0.3s ease;
-}
-
-.navbar .dropdown-item:hover i {
-    color: var(--dark-brown);
-    transform: scale(1.1);
-}
-
-.navbar .dropdown-divider {
-    border-top: 1px solid var(--gryffindor-gold);
-    margin: 0.75rem 1.5rem;
-    opacity: 0.4;
-    position: relative;
-}
-
-.navbar .dropdown-divider::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: -2px;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 4px;
-    background: var(--gryffindor-gold);
-    border-radius: 2px;
-}
-
-.navbar .dropdown-toggle::after {
-    border-top-color: var(--gryffindor-gold);
-    border-width: 6px 5px 0 5px;
-    margin-left: 0.5rem;
-    transition: transform 0.3s ease;
-}
-
-.navbar .dropdown.show .dropdown-toggle::after {
-    transform: rotate(180deg);
-}
-
-/* Garantir que o dropdown apareça acima de tudo */
-.navbar .dropdown {
-    position: relative;
-    z-index: 9999;
-}
-
-.navbar .dropdown-menu {
-    z-index: 10000 !important;
-}
-
-/* Melhorar o posicionamento do dropdown */
-.navbar .dropdown-menu.dropdown-menu-end {
-    left: auto !important;
-    right: 0 !important;
-    transform: translateX(0) !important;
-}
-
-/* Responsividade para mobile */
-@media (max-width: 991px) {
-    .navbar .dropdown-menu {
-        position: static !important;
-        float: none;
-        width: auto;
-        margin-top: 0;
-        background-color: rgba(255, 255, 255, 0.95);
-        border: 1px solid var(--gryffindor-gold);
-        box-shadow: none;
-    }
-    
-    .navbar .dropdown-item:hover {
-        transform: none;
-        padding-left: 1.5rem;
-    }
-}
-
-/* Indicador visual para usuário logado */
-.navbar .nav-link[id="userDropdown"] {
-    position: relative;
-}
-
-.navbar .nav-link[id="userDropdown"]::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    width: 8px;
-    height: 8px;
-    background: #28a745;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
-    }
-}
-
 /* Responsividade */
 @media (max-width: 768px) {
     .magical-header h1 {
@@ -539,113 +401,4 @@ input[type="checkbox"].ingredient-checkbox,
     accent-color: var(--gryffindor-gold);
     margin-right: 8px;
     vertical-align: middle;
-}
-
-/* Estilos adicionais para melhorar o dropdown */
-.navbar .dropdown-item.text-danger {
-    color: #8B0000 !important;
-    font-weight: 600;
-}
-
-.navbar .dropdown-item.text-danger:hover {
-    color: #fff !important;
-    background: transparent;
-}
-
-.navbar .dropdown-item.text-danger:hover::before {
-    background: linear-gradient(135deg, #8B0000 0%, #DC143C 100%);
-}
-
-.navbar .dropdown-item.text-danger i {
-    color: #8B0000;
-}
-
-.navbar .dropdown-item.text-danger:hover i {
-    color: #fff;
-}
-
-.navbar .dropdown-item.active {
-    background: transparent;
-    color: var(--dark-brown);
-    font-weight: 600;
-    border-left-color: var(--gryffindor-gold);
-}
-
-.navbar .dropdown-item.active::before {
-    width: 100%;
-    background: linear-gradient(135deg, var(--gryffindor-gold) 0%, #FFD700 100%);
-}
-
-.navbar .dropdown-item.active::after {
-    content: '●';
-    position: absolute;
-    right: 1rem;
-    color: var(--gryffindor-gold);
-    font-size: 0.8rem;
-}
-
-/* Melhorar a seta do dropdown */
-.navbar .dropdown-toggle::after {
-    transition: transform 0.3s ease;
-}
-
-.navbar .dropdown.show .dropdown-toggle::after {
-    transform: rotate(180deg);
-}
-
-/* Adicionar borda sutil nos itens */
-.navbar .dropdown-item {
-    border-left: 3px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.navbar .dropdown-item:hover {
-    border-left-color: var(--gryffindor-gold);
-}
-
-/* Estilo especial para o item de logout */
-.navbar .dropdown-item.text-danger:hover {
-    border-left-color: #8B0000;
-}
-
-/* Indicador visual para dropdown ativo */
-.navbar .dropdown.show .dropdown-toggle {
-    background: rgba(212, 175, 55, 0.1);
-    border-radius: 6px;
-}
-
-/* Estilos específicos para o navbar */
-.navbar {
-    z-index: 9998 !important;
-    position: sticky !important;
-    top: 0;
-    width: 100%;
-    background: linear-gradient(135deg, var(--dark-brown) 0%, #4A2F1A 100%) !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    border-bottom: 2px solid var(--gryffindor-gold);
-    backdrop-filter: blur(15px);
-}
-
-.navbar-brand {
-    font-family: 'Cinzel', serif;
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: var(--gryffindor-gold) !important;
-    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-}
-
-.navbar-nav .nav-link {
-    font-family: 'Cinzel', serif;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.navbar-nav .nav-link:hover {
-    transform: translateY(-2px);
-    text-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
-}
-
-/* Remover padding-top do body */
-body {
-    padding-top: 0;
 }

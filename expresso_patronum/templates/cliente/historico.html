@@ -24,25 +24,38 @@
         <div class="historico-header">
             <h1 class="historico-title">
                 <i class="fas fa-history"></i> Histórico de Pedidos
+                <span id="update-indicator" class="update-indicator" style="display: none;">
+                    <i class="fas fa-sync fa-spin"></i>
+                </span>
             </h1>
             
             <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" data-stat="total">
                     <div class="stat-value">{{ estatisticas.total }}</div>
                     <div class="stat-label">Total de Pedidos</div>
+                    <div class="stat-trend" style="display: none;"></div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-stat="concluidos">
                     <div class="stat-value">{{ estatisticas.concluidos }}</div>
                     <div class="stat-label">Pedidos Entregues</div>
+                    <div class="stat-trend" style="display: none;"></div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-stat="pendentes">
                     <div class="stat-value">{{ estatisticas.pendentes }}</div>
                     <div class="stat-label">Pedidos Pendentes</div>
+                    <div class="stat-trend" style="display: none;"></div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-stat="valor_total">
                     <div class="stat-value">R$ {{ estatisticas.valor_total|floatformat:2 }}</div>
                     <div class="stat-label">Total Gasto</div>
+                    <div class="stat-trend" style="display: none;"></div>
                 </div>
+            </div>
+            
+            <!-- Indicador de última atualização -->
+            <div class="update-info" style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">
+                <i class="fas fa-clock"></i> 
+                <span id="last-update">Última atualização: agora</span>
             </div>
         </div>
 
@@ -157,34 +170,320 @@
 </div>
 
 <script>
-// Animação para as estatísticas
+// Animação dinâmica para as estatísticas
 document.addEventListener('DOMContentLoaded', function() {
-    const statValues = document.querySelectorAll('.stat-value');
+    const statCards = document.querySelectorAll('.stat-card');
     
-    statValues.forEach(stat => {
-        const text = stat.textContent.trim();
-        const number = parseFloat(text.replace('R$', '').replace(',', '.')) || parseInt(text) || 0;
+    // Função para animar números com efeito de contagem
+    function animateCounter(element, finalValue, isDecimal = false, prefix = '', suffix = '') {
+        const startValue = 0;
+        const increment = finalValue / 60; // 60 frames para animação suave
+        let currentValue = 0;
         
-        if (number > 0) {
-            let currentValue = 0;
-            const increment = number / 50;
-            const timer = setInterval(() => {
-                currentValue += increment;
-                if (currentValue >= number) {
-                    if (text.includes('R$')) {
-                        stat.textContent = `R$ ${number.toFixed(2)}`;
-                    } else {
-                        stat.textContent = Math.floor(number);
-                    }
-                    clearInterval(timer);
-                } else {
-                    if (text.includes('R$')) {
-                        stat.textContent = `R$ ${currentValue.toFixed(2)}`;
-                    } else {
-                        stat.textContent = Math.floor(currentValue);
-                    }
+        const timer = setInterval(() => {
+            currentValue += increment;
+            
+            if (currentValue >= finalValue) {
+                currentValue = finalValue;
+                clearInterval(timer);
+                
+                // Adicionar efeito de "pulse" quando terminar a animação
+                element.style.animation = 'pulse-highlight 0.5s ease-in-out';
+            }
+            
+            // Formatar o valor baseado no tipo
+            let displayValue;
+            if (isDecimal) {
+                displayValue = currentValue.toFixed(2);
+            } else {
+                displayValue = Math.floor(currentValue);
+            }
+            
+            element.textContent = prefix + displayValue + suffix;
+        }, 16); // ~60fps
+    }
+    
+    // Função para animar cada card com delay escalonado
+    function animateStatCard(card, delay) {
+        setTimeout(() => {
+            // Adicionar classe para animação de entrada
+            card.style.animation = 'slide-in-up 0.6s ease-out forwards';
+            
+            const valueElement = card.querySelector('.stat-value');
+            const labelText = card.querySelector('.stat-label').textContent;
+            const originalText = valueElement.textContent.trim();
+            
+            // Determinar tipo de valor e extrair número
+            let finalValue = 0;
+            let isDecimal = false;
+            let prefix = '';
+            let suffix = '';
+            
+            if (originalText.includes('R$')) {
+                // Valor monetário
+                finalValue = parseFloat(originalText.replace('R$', '').replace(',', '.').trim()) || 0;
+                isDecimal = true;
+                prefix = 'R$ ';
+            } else {
+                // Número inteiro
+                finalValue = parseInt(originalText) || 0;
+            }
+            
+            // Iniciar animação apenas se o valor for maior que 0
+            if (finalValue > 0) {
+                valueElement.textContent = prefix + '0' + suffix;
+                
+                // Delay adicional para começar a contagem após a animação de entrada
+                setTimeout(() => {
+                    animateCounter(valueElement, finalValue, isDecimal, prefix, suffix);
+                }, 300);
+            }
+            
+            // Adicionar interatividade hover
+            addHoverEffects(card, labelText, finalValue, isDecimal, prefix, suffix);
+            
+        }, delay);
+    }
+    
+    // Função para adicionar efeitos de hover interativos
+    function addHoverEffects(card, labelText, value, isDecimal, prefix, suffix) {
+        const valueElement = card.querySelector('.stat-value');
+        const labelElement = card.querySelector('.stat-label');
+        
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-5px) scale(1.02)';
+            card.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
+            
+            // Adicionar informação extra baseada no tipo
+            if (labelText.includes('Total Gasto')) {
+                labelElement.textContent = 'Investido em Magia ✨';
+            } else if (labelText.includes('Pedidos Entregues')) {
+                labelElement.textContent = 'Poções Consumidas 🧙‍♂️';
+            } else if (labelText.includes('Total de Pedidos')) {
+                labelElement.textContent = 'Aventuras Mágicas 🏰';
+            } else if (labelText.includes('Pedidos Pendentes')) {
+                labelElement.textContent = 'Poções a Caminho 🔮';
+            }
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0) scale(1)';
+            card.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+            labelElement.textContent = labelText; // Restaurar texto original
+        });
+        
+        // Efeito de clique para "refresh" do contador
+        card.addEventListener('click', () => {
+            valueElement.style.animation = 'bounce 0.6s ease-in-out';
+            setTimeout(() => {
+                valueElement.style.animation = '';
+                if (value > 0) {
+                    animateCounter(valueElement, value, isDecimal, prefix, '');
                 }
-            }, 30);
+            }, 600);
+        });
+    }
+    
+    // Iniciar animações com delays escalonados
+    statCards.forEach((card, index) => {
+        // Estilo inicial para animação
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'all 0.3s ease';
+        
+        animateStatCard(card, index * 200);
+    });
+    
+    // Adicionar estilos CSS dinâmicos para animações
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slide-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse-highlight {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .stat-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-value {
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .stat-label {
+            transition: all 0.2s ease;
+        }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: -100%; }
+        }
+        
+        /* Estilos para indicadores de atualização */
+        .update-indicator {
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            color: #3498db;
+        }
+        
+        .btn-refresh {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-refresh:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .stat-trend {
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 0.3rem;
+            opacity: 0.9;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Atualização automática das estatísticas usando a nova API
+    function setupRealTimeUpdates() {
+        const updateIndicator = document.getElementById('update-indicator');
+        const lastUpdateElement = document.getElementById('last-update');
+        const refreshButton = document.getElementById('refresh-stats');
+        
+        let lastValues = {};
+        
+        // Função para buscar estatísticas atualizadas
+        async function fetchUpdatedStats() {
+            try {
+                updateIndicator.style.display = 'inline';
+                
+                const response = await fetch('/cliente/api/estatisticas-dinamicas/');
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateStatistics(data.estatisticas, lastValues);
+                    lastValues = { ...data.estatisticas };
+                    
+                    // Atualizar timestamp
+                    const now = new Date();
+                    lastUpdateElement.textContent = `Última atualização: ${now.toLocaleTimeString()}`;
+                }
+            } catch (error) {
+                console.error('Erro ao buscar estatísticas:', error);
+            } finally {
+                updateIndicator.style.display = 'none';
+            }
+        }
+        
+        // Configurar botão de refresh manual
+        refreshButton.addEventListener('click', fetchUpdatedStats);
+        
+        // Configurar atualização automática a cada 30 segundos
+        const autoUpdateInterval = setInterval(fetchUpdatedStats, 30000);
+        
+        // Parar atualizações se a página não estiver visível
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                clearInterval(autoUpdateInterval);
+            } else {
+                setupRealTimeUpdates(); // Reiniciar quando voltar
+            }
+        });
+        
+        return autoUpdateInterval;
+    }
+    
+    function updateStatistics(newStats, previousStats = {}) {
+        const statCards = document.querySelectorAll('.stat-card');
+        
+        statCards.forEach(card => {
+            const statType = card.dataset.stat;
+            const valueElement = card.querySelector('.stat-value');
+            const trendElement = card.querySelector('.stat-trend');
+            
+            if (!newStats[statType] && newStats[statType] !== 0) return;
+            
+            const newValue = newStats[statType];
+            const oldValue = previousStats[statType] || 0;
+            
+            // Determinar formato do valor
+            let isDecimal = statType === 'valor_total';
+            let prefix = isDecimal ? 'R$ ' : '';
+            
+            // Calcular tendência
+            let trendDirection = '';
+            let trendColor = '';
+            
+            if (oldValue !== undefined && newValue !== oldValue) {
+                if (newValue > oldValue) {
+                    trendDirection = '↗️';
+                    trendColor = '#27ae60';
+                } else if (newValue < oldValue) {
+                    trendDirection = '↘️';
+                    trendColor = '#e74c3c';
+                }
+                
+                // Mostrar trend se houver mudança
+                if (trendDirection) {
+                    trendElement.style.display = 'block';
+                    trendElement.style.color = trendColor;
+                    trendElement.textContent = trendDirection + ' ' + Math.abs(newValue - oldValue);
+                    
+                    // Esconder trend após 3 segundos
+                    setTimeout(() => {
+                        trendElement.style.display = 'none';
+                    }, 3000);
+                }
+                
+                // Animar mudança
+                card.style.animation = 'pulse-highlight 0.8s ease-in-out';
+                setTimeout(() => {
+                    card.style.animation = '';
+                }, 800);
+            }
+            
+            // Atualizar valor com animação
+            if (newValue !== oldValue || !previousStats[statType]) {
+                animateCounter(valueElement, newValue, isDecimal, prefix, '');
+            }
+        });
+    }
+    
+    // Inicializar atualizações em tempo real
+    const updateInterval = setupRealTimeUpdates();
+    
+    // Limpar interval quando a página for fechada
+    window.addEventListener('beforeunload', () => {
+        if (updateInterval) {
+            clearInterval(updateInterval);
         }
     });
 });

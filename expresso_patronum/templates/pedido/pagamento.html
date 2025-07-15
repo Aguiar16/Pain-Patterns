@@ -13,52 +13,13 @@
             
             <div class="order-summary-details">
                 <h5 style="color: #3C2415; margin-bottom: 1.5rem;">📝 Itens do seu Caldeirão:</h5>
-                
-                <!-- Item 1 -->
-                <div class="order-item mb-3 p-3" style="border: 1px solid #D4AF37; border-radius: 10px; background: rgba(255,255,255,0.5);">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 style="color: #8B0000;">🍺 Butterbeer Latte Personalizado</h6>
-                            <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: #666;">
-                                <li>• Leite de Aveia (+R$ 1,50)</li>
-                                <li>• Canela Encantada (+R$ 1,00)</li>
-                                <li>• Chantilly das Nuvens (+R$ 2,50)</li>
-                                <li>• Sem Açúcar (-R$ 0,50)</li>
-                            </ul>
-                        </div>
-                        <div class="text-end">
-                            <div class="price" style="font-size: 1.2rem;">R$ 16,50</div>
-                            <button class="btn btn-sm" style="color: #8B0000; font-size: 0.8rem;" onclick="removeItem(1)">
-                                🗑️ Remover
-                            </button>
-                        </div>
-                    </div>
+                <div id="order-items-list">
+                    <!-- Itens do pedido serão renderizados dinamicamente aqui -->
                 </div>
-
-                <!-- Item 2 -->
-                <div class="order-item mb-3 p-3" style="border: 1px solid #D4AF37; border-radius: 10px; background: rgba(255,255,255,0.5);">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 style="color: #8B0000;">🦌 Patronus Espresso</h6>
-                            <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.9rem; color: #666;">
-                                <li>• Açúcar Cristal (+R$ 0,50)</li>
-                                <li>• Duplo</li>
-                            </ul>
-                        </div>
-                        <div class="text-end">
-                            <div class="price" style="font-size: 1.2rem;">R$ 9,40</div>
-                            <button class="btn btn-sm" style="color: #8B0000; font-size: 0.8rem;" onclick="removeItem(2)">
-                                🗑️ Remover
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <hr style="border-color: #D4AF37; border-width: 2px;">
-
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <span style="font-size: 1.2rem; color: #3C2415;"><strong>Subtotal:</strong></span>
-                    <span style="font-size: 1.2rem; color: #D4AF37;" id="subtotal"><strong>R$ 25,90</strong></span>
+                    <span style="font-size: 1.2rem; color: #D4AF37;" id="subtotal"><strong>R$ 0,00</strong></span>
                 </div>
             </div>
         </div>
@@ -82,7 +43,6 @@
                                 </div>
                                 <div class="text-end">
                                     <div style="font-size: 1.5rem; font-weight: bold;">-10%</div>
-                                    <div style="font-size: 0.9rem;">R$ 23,31</div>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +61,6 @@
                                 </div>
                                 <div class="text-end">
                                     <div style="font-size: 1.5rem; font-weight: bold;">-5%</div>
-                                    <div style="font-size: 0.9rem;">R$ 24,61</div>
                                 </div>
                             </div>
                         </div>
@@ -117,10 +76,6 @@
                                 <div>
                                     <h5>💳 Cartão de Crédito/Débito</h5>
                                     <p style="margin: 0; opacity: 0.9;">Pagamento tradicional sem desconto</p>
-                                </div>
-                                <div class="text-end">
-                                    <div style="font-size: 1.5rem; font-weight: bold;">Sem desconto</div>
-                                    <div style="font-size: 0.9rem;">R$ 25,90</div>
                                 </div>
                             </div>
                         </div>
@@ -190,37 +145,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Dados Pessoais -->
-        <div class="magical-card mt-4">
-            <h4 style="font-family: 'Cinzel', serif; color: #8B0000; margin-bottom: 2rem;">
-                🧙‍♂️ Dados do Bruxo/Bruxa
-            </h4>
-            
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Nome Completo:</label>
-                    <input type="text" class="form-control" value="Harry Potter" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Casa de Hogwarts:</label>
-                    <select class="form-control">
-                        <option value="gryffindor">🦁 Grifinória</option>
-                        <option value="slytherin">🐍 Sonserina</option>
-                        <option value="ravenclaw">🦅 Corvinal</option>
-                        <option value="hufflepuff">🦡 Lufa-Lufa</option>
-                    </select>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Email Mágico:</label>
-                    <input type="email" class="form-control" value="harry@hogwarts.edu" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label">Coruja de Contato (WhatsApp):</label>
-                    <input type="tel" class="form-control" placeholder="(11) 99999-9999" required>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Resumo Final -->
@@ -232,7 +156,7 @@
             
             <div class="summary-line d-flex justify-content-between mb-2">
                 <span>Subtotal:</span>
-                <span>R$ 25,90</span>
+                <span id="subtotal-summary"></span>
             </div>
             
             <div class="summary-line d-flex justify-content-between mb-2" id="discount-line" style="display: none !important;">
@@ -243,7 +167,7 @@
             <hr style="border-color: #D4AF37;">
 
             <div class="total-price" id="final-total">
-                R$ 25,90
+                <!-- O valor será preenchido dinamicamente pelo JS -->
             </div>
 
             <div class="payment-method-selected mt-3 mb-3" id="selected-method" style="display: none;">
@@ -302,162 +226,12 @@
 {% endblock %}
 
 {% block extra_css %}
-<style>
-.payment-option {
-    cursor: pointer;
-}
-
-.payment-radio {
-    display: none;
-}
-
-.payment-card {
-    padding: 1.5rem;
-    border-radius: 15px;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.payment-option:hover .payment-card {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-.payment-radio:checked + .payment-label .payment-card {
-    border-color: #D4AF37;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-}
-
-.summary-line {
-    font-size: 1rem;
-    color: #3C2415;
-}
-
-.payment-details {
-    animation: fadeIn 0.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-</style>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/pagamento.css' %}">
 {% endblock %}
 
 {% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
-    const paymentDetails = document.getElementById('payment-details');
-    const finishBtn = document.getElementById('finish-order-btn');
-    const discountLine = document.getElementById('discount-line');
-    const discountLabel = document.getElementById('discount-label');
-    const discountAmount = document.getElementById('discount-amount');
-    const finalTotal = document.getElementById('final-total');
-    const selectedMethod = document.getElementById('selected-method');
-    const selectedMethodName = document.getElementById('selected-method-name');
-
-    const basePrice = 25.90;
-
-    paymentRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
-            const method = this.value;
-            let finalPrice = basePrice;
-            let discount = 0;
-            let methodName = '';
-
-            // Esconde todos os detalhes
-            document.querySelectorAll('.payment-details').forEach(detail => {
-                detail.style.display = 'none';
-            });
-
-            // Calcula desconto e mostra detalhes específicos
-            switch(method) {
-                case 'fidelidade':
-                    discount = basePrice * 0.10;
-                    finalPrice = basePrice - discount;
-                    methodName = '🎫 Cartão Fidelidade (-10%)';
-                    document.getElementById('fidelidade-details').style.display = 'block';
-                    break;
-                case 'pix':
-                    discount = basePrice * 0.05;
-                    finalPrice = basePrice - discount;
-                    methodName = '💳 PIX Mágico (-5%)';
-                    document.getElementById('pix-details').style.display = 'block';
-                    break;
-                case 'cartao':
-                    methodName = '💳 Cartão de Crédito/Débito';
-                    document.getElementById('cartao-details').style.display = 'block';
-                    break;
-            }
-
-            // Atualiza interface
-            if (discount > 0) {
-                discountLine.style.display = 'flex';
-                discountLabel.textContent = 'Desconto:';
-                discountAmount.textContent = `- R$ ${discount.toFixed(2)}`;
-            } else {
-                discountLine.style.display = 'none';
-            }
-
-            finalTotal.textContent = `R$ ${finalPrice.toFixed(2)}`;
-            selectedMethodName.textContent = methodName;
-            selectedMethod.style.display = 'block';
-            paymentDetails.style.display = 'block';
-            finishBtn.disabled = false;
-
-            // Efeito mágico no preço
-            finalTotal.style.transform = 'scale(1.1)';
-            setTimeout(() => {
-                finalTotal.style.transform = 'scale(1)';
-            }, 200);
-        });
-    });
-
-    // Finalizar pedido
-    finishBtn.addEventListener('click', function() {
-        const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
-        if (selectedPayment) {
-            // Simula processamento
-            this.disabled = true;
-            this.innerHTML = '⏳ Processando Magia...';
-            
-            setTimeout(() => {
-                document.getElementById('paid-amount').textContent = finalTotal.textContent;
-                const modal = new bootstrap.Modal(document.getElementById('confirmacao-pagamento'));
-                modal.show();
-                
-                showMagicalNotification('Pagamento realizado com sucesso! 🎉', 'success');
-            }, 2000);
-        }
-    });
-
-    // Formatação de cartão
-    const cardNumberInput = document.querySelector('input[placeholder="0000 0000 0000 0000"]');
-    if (cardNumberInput) {
-        cardNumberInput.addEventListener('input', function() {
-            let value = this.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
-            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
-            this.value = formattedValue;
-        });
-    }
-
-    // Formatação de validade
-    const validityInput = document.querySelector('input[placeholder="MM/AA"]');
-    if (validityInput) {
-        validityInput.addEventListener('input', function() {
-            let value = this.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.substring(0,2) + '/' + value.substring(2,4);
-            }
-            this.value = value;
-        });
-    }
-});
-
-function removeItem(itemId) {
-    showMagicalNotification('Item removido do caldeirão! 🗑️', 'info');
-    // Aqui seria a lógica para remover o item
-}
-</script>
+{% load static %}
+<script src="{% static 'js/pagamento.js' %}"></script>
 {% endblock %}
+

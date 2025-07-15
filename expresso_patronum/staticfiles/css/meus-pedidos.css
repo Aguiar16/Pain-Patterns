@@ -1,0 +1,316 @@
+/* Estilos específicos para a página Meus Pedidos (Carrinho) */
+
+.carrinho-item {
+    transition: all 0.3s ease;
+    border-left: 4px solid #D4AF37;
+    position: relative;
+}
+
+.carrinho-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.quantidade-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.quantidade-btn {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #D4AF37;
+    background: #F4F1E8;
+    color: #8B0000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quantidade-btn:hover {
+    background: #D4AF37;
+    color: white;
+    transform: scale(1.1);
+}
+
+.quantidade-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.quantidade-display {
+    min-width: 40px;
+    text-align: center;
+    font-weight: bold;
+    color: #3C2415;
+}
+
+.item-preco {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #D4AF37;
+}
+
+.carrinho-total {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(139, 0, 0, 0.1));
+    border: 2px solid #D4AF37;
+    border-radius: 10px;
+    padding: 1.5rem;
+}
+
+.total-valor {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #8B0000;
+}
+
+.carrinho-vazio {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.carrinho-vazio-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+/* Seção de Rastreamento */
+.rastreamento-section {
+    margin-top: 3rem;
+}
+
+.tracking-input-group {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.tracking-result {
+    display: none;
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #F4F1E8;
+    border: 2px solid #D4AF37;
+    border-radius: 10px;
+}
+
+.tracking-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.tracking-timeline::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #D4AF37;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 2rem;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -2.5rem;
+    width: 2rem;
+    height: 2rem;
+    background: #F4F1E8;
+    border: 2px solid #D4AF37;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.timeline-item.completed .timeline-marker {
+    background: #2D5016;
+    color: white;
+    border-color: #2D5016;
+}
+
+.timeline-item.active .timeline-marker {
+    background: #0E1A40;
+    color: white;
+    border-color: #0E1A40;
+    animation: pulse 2s infinite;
+}
+
+.timeline-content h6 {
+    color: #3C2415;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-content p {
+    color: #666;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.timeline-content small {
+    color: #999;
+}
+
+/* Animações */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.carrinho-item {
+    animation: slideInUp 0.6s ease forwards;
+}
+
+/* Status badges para rastreamento */
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+}
+
+.status-recebido {
+    background: linear-gradient(135deg, #D4AF37, #FFE55C);
+    color: #3C2415;
+}
+
+.status-em-preparo, .status-preparo {
+    background: linear-gradient(135deg, #0E1A40, #1E3A8A);
+    color: white;
+}
+
+.status-pronto {
+    background: linear-gradient(135deg, #2D5016, #16A085);
+    color: white;
+}
+
+.status-entregue {
+    background: linear-gradient(135deg, #8B0000, #E74C3C);
+    color: white;
+}
+
+.status-cancelado {
+    background: linear-gradient(135deg, #666, #999);
+    color: white;
+}
+
+/* Estilos para itens personalizados */
+.carrinho-item[data-personalizada="true"] {
+    border-left-color: #8B0000;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(139, 0, 0, 0.05));
+}
+
+.badge-personalizada {
+    background: linear-gradient(135deg, #D4AF37, #8B0000);
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ingredientes-lista {
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 8px;
+    padding: 0.75rem;
+    border-left: 3px solid #D4AF37;
+}
+
+.ingredientes-lista ul {
+    margin-bottom: 0;
+}
+
+.ingredientes-lista li {
+    padding: 0.1rem 0;
+    transition: color 0.2s ease;
+}
+
+.ingredientes-lista li:hover {
+    color: #8B0000 !important;
+}
+
+.descricao-completa {
+    background: rgba(139, 0, 0, 0.05);
+    border-radius: 8px;
+    padding: 0.75rem;
+    border-left: 3px solid #8B0000;
+}
+
+.descricao-completa p {
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+/* Animação especial para itens personalizados */
+.carrinho-item[data-personalizada="true"]:hover {
+    box-shadow: 0 12px 30px rgba(212, 175, 55, 0.2);
+    border-left-color: #8B0000;
+}
+
+/* Indicador visual de item personalizado */
+.carrinho-item[data-personalizada="true"]::before {
+    content: '✨';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 1.2rem;
+    background: #D4AF37;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .quantidade-controls {
+        justify-content: center;
+    }
+    
+    .carrinho-total {
+        margin-top: 2rem;
+    }
+    
+    .timeline-item {
+        padding-left: 1.5rem;
+    }
+    
+    .timeline-marker {
+        left: -2rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 0.7rem;
+    }
+}

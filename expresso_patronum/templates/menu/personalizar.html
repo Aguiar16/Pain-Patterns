@@ -30,7 +30,7 @@
                     <select name="leite" class="form-control" id="leite-select">
                         <option value="tradicional" data-price="0">🥛 Leite Tradicional (incluído)</option>
                         {% for ingrediente in ingredientes_organizados.leites %}
-                        <option value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco }}">{{ ingrediente.nome }} (+R$ {{ ingrediente.preco }})</option>
+                        <option value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco|stringformat:"f" }}">{{ ingrediente.nome }} (+R$ {{ ingrediente.preco }})</option>
                         {% endfor %}
                         <option value="sem-leite" data-price="-1.00">❌ Sem Leite (-R$ 1,00)</option>
                     </select>
@@ -42,7 +42,7 @@
                     <select name="acucar" class="form-control" id="acucar-select">
                         <option value="normal" data-price="0">🍯 Açúcar Normal (incluído)</option>
                         {% for ingrediente in ingredientes_organizados.acucares %}
-                        <option value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco }}">{{ ingrediente.nome }} {% if ingrediente.preco >= 0 %}(+R$ {{ ingrediente.preco }}){% else %}(R$ {{ ingrediente.preco }}){% endif %}</option>
+                        <option value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco|stringformat:"f" }}">{{ ingrediente.nome }} {% if ingrediente.preco >= 0 %}(+R$ {{ ingrediente.preco }}){% else %}(R$ {{ ingrediente.preco }}){% endif %}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -56,7 +56,7 @@
                         {% for ingrediente in ingredientes_organizados.especiarias %}
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                   name="ingredientes" value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco }}" id="ingrediente_{{ ingrediente.id }}">
+                                   name="ingredientes" value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco|stringformat:"f" }}" id="ingrediente_{{ ingrediente.id }}">
                             <label class="form-check-label" for="ingrediente_{{ ingrediente.id }}">
                                 {{ ingrediente.nome }} (+R$ {{ ingrediente.preco }})
                             </label>
@@ -65,7 +65,7 @@
                         {% for ingrediente in ingredientes_organizados.extras %}
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                   name="ingredientes" value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco }}" id="extra_{{ ingrediente.id }}">
+                                   name="ingredientes" value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco|stringformat:"f" }}" id="extra_{{ ingrediente.id }}">
                             <label class="form-check-label" for="extra_{{ ingrediente.id }}">
                                 {{ ingrediente.nome }} (+R$ {{ ingrediente.preco }})
                             </label>
@@ -79,13 +79,6 @@
                     <label>📝 Instruções Especiais para o Bruxo Barista:</label>
                     <textarea name="instrucoes" class="form-control" rows="3" 
                               placeholder="Alguma preferência especial para sua poção? Ex: 'Mais forte', 'Bem doce', 'Extra quente'..."></textarea>
-                </div>
-
-                <!-- Nome do Cliente -->
-                <div class="form-group">
-                    <label>🧙‍♂️ Nome do Bruxo/Bruxa:</label>
-                    <input type="text" name="cliente" class="form-control" 
-                           placeholder="Como devemos chamar você?" required>
                 </div>
             </form>
         </div>
@@ -154,10 +147,10 @@
             </div>
             <div class="modal-footer" style="border-color: #D4AF37; justify-content: center;">
                 <a href="{% url 'menu:cardapio' %}" class="magical-btn">
-                    📜 Continuar Navegando
+                    📜 Personalizar Outra Poção
                 </a>
                 <a href="{% url 'pedido:meus_pedidos' %}" class="magical-btn success">
-                    🛒 Finalizar Pedido
+                    🛒 Ver Meu Carrinho
                 </a>
             </div>
         </div>
@@ -252,6 +245,13 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('bebida_slug', '{{ bebida_slug }}');
         formData.append('bebida_nome', '{{ bebida.nome }}');
         formData.append('bebida_preco', '{{ bebida.preco }}');
+        // NÃO enviar preco_total, pois o backend calcula via Decorator
+
+        // Adicionar observações se houver
+        const instrucoes = form.querySelector('[name="instrucoes"]').value;
+        if (instrucoes) {
+            formData.append('observacoes', instrucoes);
+        }
 
         // Enviar via AJAX
         fetch('{% url "menu:adicionar_carrinho" %}', {
@@ -264,7 +264,13 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                // Adicionar ao carrinho local (JavaScript)
+                // Sempre usar o valor do backend (Decorator)
+                adicionarAoCarrinhoLocal(data.item);
                 showMagicalNotification(data.message, 'success');
+
+                // Atualiza o preço exibido para o usuário
+                priceDisplay.textContent = `R$ ${parseFloat(data.item.preco_total).toFixed(2).replace('.', ',')}`;
 
                 // Mostra modal de confirmação
                 const modal = new bootstrap.Modal(document.getElementById('confirmacao-modal'));
@@ -275,6 +281,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (contadorCarrinho && data.total_carrinho) {
                     contadorCarrinho.textContent = data.total_carrinho;
                 }
+
+                // Limpar formulário
+                form.reset();
+                updatePrice(); // Recalcular preços
             } else {
                 showMagicalNotification(data.message, 'error');
             }
@@ -284,6 +294,41 @@ document.addEventListener('DOMContentLoaded', function() {
             showMagicalNotification('Erro ao adicionar poção ao caldeirão!', 'error');
         });
     });
+
+    // Função para adicionar ao carrinho local (JavaScript)
+    function adicionarAoCarrinhoLocal(item) {
+        // Verificar se existe o CarrinhoManager global
+        if (window.carrinho && typeof window.carrinho.adicionarItemPersonalizado === 'function') {
+            window.carrinho.adicionarItemPersonalizado({
+                id: Date.now(),
+                bebida: item.bebida_nome,
+                preco: item.preco_total,
+                quantidade: 1,
+                ingredientes: item.ingredientes || [],
+                observacoes: item.observacoes || '',
+                descricao_completa: item.descricao_completa || '',
+                personalizada: true
+            });
+        } else {
+            // Fallback: salvar no localStorage
+            let carrinhoLocal = JSON.parse(localStorage.getItem('carrinho_expresso') || '[]');
+            
+            const novoItem = {
+                id: Date.now(),
+                bebida: item.bebida_nome,
+                preco: item.preco_total,
+                quantidade: 1,
+                ingredientes: item.ingredientes || [],
+                observacoes: item.observacoes || '',
+                descricao_completa: item.descricao_completa || '',
+                personalizada: true,
+                timestamp: new Date().toISOString()
+            };
+            
+            carrinhoLocal.push(novoItem);
+            localStorage.setItem('carrinho_expresso', JSON.stringify(carrinhoLocal));
+        }
+    }
 
     // Animação inicial
     setTimeout(() => {

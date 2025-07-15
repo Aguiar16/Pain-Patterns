@@ -58,7 +58,7 @@ def historico(request):
             cliente__icontains=request.user.username
         ).order_by('-criado_em')
         
-        # Estatísticas
+        # Recalcular estatísticas dinamicamente sempre
         pedidos_concluidos = pedidos.filter(status='Entregue').count()
         pedidos_pendentes = pedidos.exclude(status='Entregue').count()
         valor_total = sum(float(p.preco) for p in pedidos.filter(status='Entregue'))
@@ -80,14 +80,24 @@ def historico(request):
             except ValueError:
                 pass
         
+        # Calcular estatísticas atualizadas com filtros aplicados
+        estatisticas = {
+            'total': pedidos.count(),
+            'concluidos': pedidos.filter(status='Entregue').count(),
+            'pendentes': pedidos.exclude(status='Entregue').count(),
+            'valor_total': sum(float(p.preco) for p in pedidos.filter(status='Entregue')),
+        }
+        
+        # Se for uma requisição AJAX, retornar apenas as estatísticas
+        if request.GET.get('ajax') == '1':
+            return JsonResponse({
+                'success': True,
+                'estatisticas': estatisticas
+            })
+        
         context = {
             'pedidos': pedidos,
-            'estatisticas': {
-                'total': pedidos.count(),
-                'concluidos': pedidos_concluidos,
-                'pendentes': pedidos_pendentes,
-                'valor_total': valor_total,
-            },
+            'estatisticas': estatisticas,
             'filtro_status': filtro_status,
             'filtro_mes': filtro_mes,
             'status_choices': [
@@ -139,6 +149,56 @@ def atualizar_perfil(request):
             })
     
     return JsonResponse({'success': False, 'message': 'Método não permitido'})
+
+@cliente_required
+def api_estatisticas_dinamicas(request):
+    """API para obter estatísticas em tempo real do cliente"""
+    try:
+        # Buscar todos os pedidos do usuário
+        pedidos = Pedido.objects.filter(
+            cliente__icontains=request.user.username
+        )
+        
+        # Calcular estatísticas dinâmicas
+        total_pedidos = pedidos.count()
+        pedidos_entregues = pedidos.filter(status='Entregue').count()
+        pedidos_pendentes = pedidos.exclude(status='Entregue').count()
+        
+        # Calcular valor total gasto (apenas pedidos entregues)
+        valor_total_gasto = sum(float(p.preco) for p in pedidos.filter(status='Entregue'))
+        
+        # Estatísticas extras para insights
+        pedidos_em_preparo = pedidos.filter(status='Em preparo').count()
+        pedidos_prontos = pedidos.filter(status='Pronto').count()
+        
+        # Calcular média de gasto por pedido
+        media_gasto = valor_total_gasto / pedidos_entregues if pedidos_entregues > 0 else 0
+        
+        # Pedido mais caro
+        pedido_mais_caro = pedidos.filter(status='Entregue').order_by('-preco').first()
+        valor_mais_caro = float(pedido_mais_caro.preco) if pedido_mais_caro else 0
+        
+        return JsonResponse({
+            'success': True,
+            'estatisticas': {
+                'total': total_pedidos,
+                'concluidos': pedidos_entregues,
+                'pendentes': pedidos_pendentes,
+                'valor_total': valor_total_gasto,
+                'em_preparo': pedidos_em_preparo,
+                'prontos': pedidos_prontos,
+                'media_gasto': round(media_gasto, 2),
+                'maior_gasto': valor_mais_caro
+            },
+            'timestamp': request.build_absolute_uri(),
+            'last_update': pedidos.first().criado_em.isoformat() if pedidos.exists() else None
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': f'Erro ao obter estatísticas: {str(e)}'
+        })
 
 def _get_user_badges(cliente_profile):
     """Retorna badges/conquistas do usuário"""

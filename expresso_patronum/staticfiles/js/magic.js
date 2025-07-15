@@ -158,45 +158,69 @@ function checkOrderUpdates() {
     });
 }
 
-function showMagicalNotification(message, type = 'info') {
+// Função global para notificações mágicas
+window.showMagicalNotification = function(message, type = 'info') {
     const notification = document.createElement('div');
-    notification.className = `magical-notification ${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <span class="notification-icon">✨</span>
-            <span class="notification-message">${message}</span>
-        </div>
-    `;
+    const icons = {
+        success: '✨',
+        error: '⚠️',
+        warning: '🔔',
+        info: 'ℹ️'
+    };
     
+    const colors = {
+        success: '#2D5016',
+        error: '#DC3545',
+        warning: '#DAA520',
+        info: '#0E1A40'
+    };
+    
+    notification.className = 'magical-notification';
     notification.style.cssText = `
         position: fixed;
         top: 20px;
         right: 20px;
-        background: linear-gradient(135deg, #D4AF37, #CD7F32);
-        color: #3C2415;
+        z-index: 9999;
+        max-width: 350px;
         padding: 1rem 1.5rem;
+        background: #F4F1E8;
+        border: 2px solid ${colors[type]};
         border-radius: 10px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        z-index: 10000;
-        transform: translateX(400px);
-        transition: transform 0.3s ease;
-        font-family: 'Crimson Text', serif;
-        font-weight: 600;
+        color: ${colors[type]};
+        font-weight: 500;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        transform: translateX(100%);
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    `;
+    
+    notification.innerHTML = `
+        <span style="font-size: 1.2rem;">${icons[type]}</span>
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" 
+                style="margin-left: auto; background: none; border: none; 
+                       color: ${colors[type]}; cursor: pointer; font-size: 1.2rem;">×</button>
     `;
     
     document.body.appendChild(notification);
     
-    // Animação de entrada
+    // Animar entrada
     setTimeout(() => {
         notification.style.transform = 'translateX(0)';
     }, 100);
     
-    // Remove automaticamente após 5 segundos
+    // Auto-remover após 4 segundos
     setTimeout(() => {
-        notification.style.transform = 'translateX(400px)';
-        setTimeout(() => notification.remove(), 300);
-    }, 5000);
-}
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 500);
+    }, 4000);
+};
 
 // Função para ordenar bebida
 function orderBeverage(beverageId, customizations = []) {
