@@ -26,6 +26,7 @@ urlpatterns = [
     path('cozinha/', include('cozinha.urls')),
     path('pagamento/', include('pagamento.urls')),
     path('cliente/', include('cliente.urls')),
+    path('auth/', include('auth_urls')),
 ]
 
 if settings.DEBUG:

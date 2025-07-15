@@ -1,0 +1,280 @@
+.historico-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.historico-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 15px 15px 0 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.historico-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23ffffff" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>') repeat;
+    animation: twinkle 15s ease-in-out infinite alternate;
+    opacity: 0.3;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.6; }
+}
+
+.historico-title {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.historico-content {
+    background: #fff;
+    border-radius: 0 0 15px 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.filters-section {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.filters-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.filter-input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.filter-button {
+    background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.filter-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    color: #fff;
+    text-decoration: none;
+}
+
+.pedidos-list {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.pedido-item {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+.pedido-item:hover {
+    background: #f8f9fa;
+}
+
+.pedido-item:last-child {
+    border-bottom: none;
+}
+
+.pedido-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.pedido-numero {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.pedido-data {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.pedido-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-recebido {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-em-preparo {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.status-pronto {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.status-entregue {
+    background: #e8f5e8;
+    color: #388e3c;
+}
+
+.pedido-details {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+}
+
+.itens-list {
+    color: #666;
+    line-height: 1.5;
+}
+
+.pedido-valor {
+    text-align: right;
+}
+
+.valor-total {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #D4AF37;
+}
+
+.valor-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: #ddd;
+    margin-bottom: 1rem;
+}
+
+.btn-action {
+    background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    color: #fff;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .historico-container {
+        margin: 1rem 0;
+        padding: 0 0.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .filters-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .pedido-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+    
+    .pedido-details {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .pedido-valor {
+        text-align: left;
+    }
+}

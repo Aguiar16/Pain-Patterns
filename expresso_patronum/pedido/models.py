@@ -43,6 +43,7 @@ class Pedido(models.Model):
     bebida = models.CharField(max_length=100)  # descrição da bebida personalizada
     preco = models.DecimalField(max_digits=6, decimal_places=2)
     status = models.CharField(max_length=20, default='Recebido')
+    observacoes = models.TextField(blank=True, null=True)  # Campo para observações especiais
     criado_em = models.DateTimeField(auto_now_add=True)
 
     # Estado e observadores não persistidos diretamente

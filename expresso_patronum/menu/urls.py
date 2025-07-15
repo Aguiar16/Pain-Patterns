@@ -8,4 +8,6 @@ urlpatterns = [
     path('cardapio/', views.cardapio, name='cardapio'),
     path('personalizar/<slug:bebida_slug>/', views.personalizar, name='personalizar'),
     path('api/adicionar-carrinho/', views.adicionar_ao_carrinho, name='adicionar_carrinho'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 ]

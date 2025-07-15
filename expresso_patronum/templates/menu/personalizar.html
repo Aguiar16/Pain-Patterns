@@ -18,12 +18,9 @@
                 <div class="form-group">
                     <label>🍯 Poção Base Selecionada:</label>
                     <div class="magical-card" style="background: rgba(212, 175, 55, 0.1); padding: 1rem;">
-                        <h4 id="bebida-nome">🍺 Butterbeer Latte</h4>
-                        <p id="bebida-descricao">
-                            Café cremoso inspirado na famosa bebida de Hogwarts, com notas de caramelo, 
-                            especiarias e uma pitada de magia dourada.
-                        </p>
-                        <div class="price" id="base-price">R$ 12,50</div>
+                        <h4 id="bebida-nome">{{ bebida.nome }}</h4>
+                        <p id="bebida-descricao">{{ bebida.descricao }}</p>
+                        <div class="price" id="base-price">R$ {{ bebida.preco|floatformat:2 }}</div>
                     </div>
                 </div>
 
@@ -32,9 +29,9 @@
                     <label>🥛 Tipo de Leite Mágico:</label>
                     <select name="leite" class="form-control" id="leite-select">
                         <option value="tradicional" data-price="0">🥛 Leite Tradicional (incluído)</option>
-                        <option value="aveia" data-price="1.50">🌾 Leite de Aveia (+R$ 1,50)</option>
-                        <option value="amendoas" data-price="1.50">🥜 Leite de Amêndoas (+R$ 1,50)</option>
-                        <option value="coco" data-price="1.50">🥥 Leite de Coco (+R$ 1,50)</option>
+                        {% for ingrediente in ingredientes_organizados.leites %}
+                        <option value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco }}">{{ ingrediente.nome }} (+R$ {{ ingrediente.preco }})</option>
+                        {% endfor %}
                         <option value="sem-leite" data-price="-1.00">❌ Sem Leite (-R$ 1,00)</option>
                     </select>
                 </div>
@@ -44,102 +41,36 @@
                     <label>🍯 Doçura Encantada:</label>
                     <select name="acucar" class="form-control" id="acucar-select">
                         <option value="normal" data-price="0">🍯 Açúcar Normal (incluído)</option>
-                        <option value="cristal" data-price="0.50">💎 Açúcar Cristal (+R$ 0,50)</option>
-                        <option value="mel" data-price="1.00">🍯 Mel de Abelhas Mágicas (+R$ 1,00)</option>
-                        <option value="agave" data-price="1.20">🌵 Xarope de Agave (+R$ 1,20)</option>
-                        <option value="sem-acucar" data-price="-0.50">🚫 Sem Açúcar (-R$ 0,50)</option>
+                        {% for ingrediente in ingredientes_organizados.acucares %}
+                        <option value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco }}">{{ ingrediente.nome }} {% if ingrediente.preco >= 0 %}(+R$ {{ ingrediente.preco }}){% else %}(R$ {{ ingrediente.preco }}){% endif %}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
-                <!-- Especiarias -->
-                <div class="form-group">
-                    <label>🌿 Especiarias Mágicas:</label>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                       name="ingredientes" value="canela" data-price="1.00" id="canela">
-                                <label class="form-check-label" for="canela">
-                                    🌿 Canela Encantada (+R$ 1,00)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                       name="ingredientes" value="cardamomo" data-price="1.20" id="cardamomo">
-                                <label class="form-check-label" for="cardamomo">
-                                    🌰 Cardamomo Mágico (+R$ 1,20)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                       name="ingredientes" value="baunilha" data-price="1.50" id="baunilha">
-                                <label class="form-check-label" for="baunilha">
-                                    🌸 Essência de Baunilha (+R$ 1,50)
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                       name="ingredientes" value="noz-moscada" data-price="1.00" id="noz-moscada">
-                                <label class="form-check-label" for="noz-moscada">
-                                    🥜 Noz-moscada Encantada (+R$ 1,00)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                       name="ingredientes" value="gengibre" data-price="0.80" id="gengibre">
-                                <label class="form-check-label" for="gengibre">
-                                    🫚 Gengibre Mágico (+R$ 0,80)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                       name="ingredientes" value="chocolate" data-price="2.00" id="chocolate">
-                                <label class="form-check-label" for="chocolate">
-                                    🍫 Chocolate Amargo (+R$ 2,00)
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Extras Especiais -->
+
+                <!-- Especiarias e Extras -->
                 <div class="form-group">
-                    <label>✨ Extras Mágicos:</label>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                       name="ingredientes" value="chantilly" data-price="2.50" id="chantilly">
-                                <label class="form-check-label" for="chantilly">
-                                    ☁️ Chantilly das Nuvens (+R$ 2,50)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                       name="ingredientes" value="marshmallow" data-price="2.00" id="marshmallow">
-                                <label class="form-check-label" for="marshmallow">
-                                    🤍 Marshmallows Mágicos (+R$ 2,00)
-                                </label>
-                            </div>
+                    <label>🌿 Especiarias & ✨ Extras Mágicos:</label>
+                    <div class="ingredientes-grid">
+                        {% for ingrediente in ingredientes_organizados.especiarias %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input ingredient-checkbox" 
+                                   name="ingredientes" value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco }}" id="ingrediente_{{ ingrediente.id }}">
+                            <label class="form-check-label" for="ingrediente_{{ ingrediente.id }}">
+                                {{ ingrediente.nome }} (+R$ {{ ingrediente.preco }})
+                            </label>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                       name="ingredientes" value="caramelo" data-price="1.80" id="caramelo">
-                                <label class="form-check-label" for="caramelo">
-                                    🍯 Calda de Caramelo (+R$ 1,80)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input ingredient-checkbox" 
-                                       name="ingredientes" value="polvilho" data-price="1.00" id="polvilho">
-                                <label class="form-check-label" for="polvilho">
-                                    ✨ Polvilho Dourado (+R$ 1,00)
-                                </label>
-                            </div>
+                        {% endfor %}
+                        {% for ingrediente in ingredientes_organizados.extras %}
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input ingredient-checkbox" 
+                                   name="ingredientes" value="{{ ingrediente.id }}" data-price="{{ ingrediente.preco }}" id="extra_{{ ingrediente.id }}">
+                            <label class="form-check-label" for="extra_{{ ingrediente.id }}">
+                                {{ ingrediente.nome }} (+R$ {{ ingrediente.preco }})
+                            </label>
                         </div>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -162,14 +93,16 @@
 
     <!-- Resumo do Pedido -->
     <div class="col-md-4">
-        <div class="order-summary floating">
+        <div class="order-summary floating" style="position:sticky;top:2rem;z-index:10;">
             <h3 style="font-family: 'Cinzel', serif; color: #8B0000; text-align: center; margin-bottom: 2rem;">
                 🔮 Resumo da Sua Poção 🔮
             </h3>
             
+
             <div id="resumo-bebida">
-                <h5 style="color: #3C2415;">🍺 Butterbeer Latte</h5>
-                <p style="font-size: 0.9rem; color: #666;">Base: R$ 12,50</p>
+                <h5 style="color: #3C2415;" id="resumo-nome">{{ bebida.nome }}</h5>
+                <p style="font-size: 0.9rem; color: #666;" id="resumo-descricao">{{ bebida.descricao }}</p>
+                <span style="font-size: 0.9rem; color: #666;">Base: R$ <span id="resumo-preco-base">{{ bebida.preco|floatformat:2 }}</span></span>
             </div>
 
             <div id="resumo-personalizacao">
@@ -182,7 +115,7 @@
             <hr style="border-color: #D4AF37;">
 
             <div class="total-price" id="preco-total">
-                R$ 12,50
+                R$ {{ bebida.preco|floatformat:2 }}
             </div>
 
             <div class="text-center" style="margin-top: 2rem;">
@@ -235,9 +168,6 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const basePrice = 12.50;
-    let currentTotal = basePrice;
-
     // Elementos
     const leiteSelect = document.getElementById('leite-select');
     const acucarSelect = document.getElementById('acucar-select');
@@ -245,6 +175,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const priceDisplay = document.getElementById('preco-total');
     const personalizationList = document.getElementById('lista-personalizacao');
     const form = document.getElementById('personalizacao-form');
+    const resumoNome = document.getElementById('resumo-nome');
+    const resumoDescricao = document.getElementById('resumo-descricao');
+    const resumoPrecoBase = document.getElementById('resumo-preco-base');
+
+    // Preço base dinâmico
+    let basePrice = parseFloat(resumoPrecoBase.textContent.replace(',', '.'));
+    let currentTotal = basePrice;
+
+    function updateResumo() {
+        // Atualiza nome, descrição e preço base se necessário
+        resumoNome.textContent = '{{ bebida.nome }}';
+        resumoDescricao.textContent = '{{ bebida.descricao }}';
+        resumoPrecoBase.textContent = parseFloat('{{ bebida.preco }}').toFixed(2).replace('.', ',');
+    }
 
     function updatePrice() {
         let total = basePrice;
@@ -276,8 +220,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Atualiza display
-        priceDisplay.textContent = `R$ ${total.toFixed(2)}`;
-        
+        priceDisplay.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
+
         if (personalizacoes.length > 0) {
             personalizationList.innerHTML = personalizacoes.map(p => 
                 `<li style="color: #3C2415; margin-bottom: 0.3rem;">• ${p}</li>`
@@ -289,6 +233,9 @@ document.addEventListener('DOMContentLoaded', function() {
         currentTotal = total;
     }
 
+    // Inicializa resumo
+    updateResumo();
+
     // Event listeners
     leiteSelect.addEventListener('change', updatePrice);
     acucarSelect.addEventListener('change', updatePrice);
@@ -299,13 +246,43 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form submission
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
-        // Aqui seria feita a chamada AJAX para salvar o pedido
-        showMagicalNotification('Poção adicionada ao caldeirão! 🧙‍♂️', 'success');
-        
-        // Mostra modal de confirmação
-        const modal = new bootstrap.Modal(document.getElementById('confirmacao-modal'));
-        modal.show();
+
+        // Preparar dados do formulário
+        const formData = new FormData(form);
+        formData.append('bebida_slug', '{{ bebida_slug }}');
+        formData.append('bebida_nome', '{{ bebida.nome }}');
+        formData.append('bebida_preco', '{{ bebida.preco }}');
+
+        // Enviar via AJAX
+        fetch('{% url "menu:adicionar_carrinho" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showMagicalNotification(data.message, 'success');
+
+                // Mostra modal de confirmação
+                const modal = new bootstrap.Modal(document.getElementById('confirmacao-modal'));
+                modal.show();
+
+                // Atualizar contador do carrinho se existir
+                const contadorCarrinho = document.querySelector('.carrinho-contador');
+                if (contadorCarrinho && data.total_carrinho) {
+                    contadorCarrinho.textContent = data.total_carrinho;
+                }
+            } else {
+                showMagicalNotification(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMagicalNotification('Erro ao adicionar poção ao caldeirão!', 'error');
+        });
     });
 
     // Animação inicial
@@ -313,6 +290,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.order-summary').style.opacity = '1';
         document.querySelector('.order-summary').style.transform = 'translateY(0)';
     }, 300);
+    // Atualiza preço inicial
+    updatePrice();
 });
 </script>
 {% endblock %}

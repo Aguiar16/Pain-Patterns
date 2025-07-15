@@ -51,7 +51,7 @@
                     <div class="form-group">
                         <label>Preço Máximo:</label>
                         <select class="form-control" id="filtro-preco">
-                            <option value="">Qualquer Preço</option>
+                            <option value="">Qualquer Valor</option>
                             <option value="10">Até R$ 10,00</option>
                             <option value="15">Até R$ 15,00</option>
                             <option value="20">Até R$ 20,00</option>
@@ -65,139 +65,24 @@
 
 <!-- Menu Grid -->
 <div class="menu-grid" id="cardapio-grid">
-    <!-- Cafés Mágicos -->
-    <div class="beverage-card" data-tipo="cafe" data-casa="gryffindor" data-preco="12.50">
-        <h3>🍺 Butterbeer Latte</h3>
-        <div class="house-gem gryffindor" style="margin: 0.5rem auto;"></div>
+    {% for bebida in bebidas %}
+    <div class="beverage-card" data-tipo="{{ bebida.tipo }}" data-casa="{{ bebida.casa }}" data-preco="{{ bebida.preco }}">
+        <h3>{{ bebida.nome }}</h3>
+        <div class="house-gem {{ bebida.casa }}" style="margin: 0.5rem auto;"></div>
         <p style="color: #3C2415;">
-            Café cremoso inspirado na famosa bebida de Hogwarts, com notas de caramelo, 
-            especiarias e uma pitada de magia dourada.
+            {{ bebida.descricao }}
         </p>
         <ul class="ingredients-list">
-            <li>☕ Espresso duplo encantado</li>
-            <li>🥛 Leite vaporizado magicamente</li>
-            <li>🍯 Xarope de caramelo mágico</li>
-            <li>✨ Canela em pó encantada</li>
+            {% for ingrediente in bebida.ingredientes %}
+            <li>{{ ingrediente }}</li>
+            {% endfor %}
         </ul>
-        <div class="price">R$ 12,50</div>
-        <a href="{% url 'menu:personalizar' 'butterbeer' %}" class="magical-btn">
-            ⚗️ Personalizar Poção
-        </a>
-    </div>
-
-    <div class="beverage-card" data-tipo="cafe" data-casa="gryffindor" data-preco="8.90">
-        <h3>🦌 Patronus Espresso</h3>
-        <div class="house-gem gryffindor" style="margin: 0.5rem auto;"></div>
-        <p style="color: #3C2415;">
-            Um espresso puro e poderoso que desperta sua energia interior, 
-            forte o suficiente para conjurar um Patronus.
-        </p>
-        <ul class="ingredients-list">
-            <li>☕ Grãos selecionados de Hogwarts</li>
-            <li>⚡ Extração sob pressão mágica</li>
-            <li>🍯 Açúcar cristalizado encantado</li>
-        </ul>
-        <div class="price">R$ 8,90</div>
-        <a href="{% url 'menu:personalizar' 'patronus' %}" class="magical-btn">
+        <div class="price">R$ {{ bebida.preco }}</div>
+        <a href="{% url 'menu:personalizar' bebida.id %}" class="magical-btn">
             ⚡ Personalizar Poção
         </a>
     </div>
-
-    <div class="beverage-card" data-tipo="cafe" data-casa="ravenclaw" data-preco="11.20">
-        <h3>📚 Café da Biblioteca</h3>
-        <div class="house-gem ravenclaw" style="margin: 0.5rem auto;"></div>
-        <p style="color: #3C2415;">
-            Para estudantes dedicados, um café que estimula a mente e a concentração, 
-            perfeito para longas sessões de estudo.
-        </p>
-        <ul class="ingredients-list">
-            <li>☕ Blend especial da Corvinal</li>
-            <li>🧠 Essência de concentração</li>
-            <li>📖 Aroma de pergaminho antigo</li>
-        </ul>
-        <div class="price">R$ 11,20</div>
-        <a href="{% url 'menu:personalizar' 'biblioteca' %}" class="magical-btn">
-            📚 Personalizar Poção
-        </a>
-    </div>
-
-    <!-- Chás Encantados -->
-    <div class="beverage-card" data-tipo="cha" data-casa="hufflepuff" data-preco="9.80">
-        <h3>🐱 Chá da Prof. McGonagall</h3>
-        <div class="house-gem hufflepuff" style="margin: 0.5rem auto;"></div>
-        <p style="color: #3C2415;">
-            Um chá refinado e elegante, com blend de ervas especiais que acalma 
-            até mesmo o coração mais agitado.
-        </p>
-        <ul class="ingredients-list">
-            <li>🍵 Blend de ervas escocesas</li>
-            <li>🌿 Hortelã do jardim de Hogwarts</li>
-            <li>🍯 Mel encantado das abelhas mágicas</li>
-            <li>🍋 Limão siciliano</li>
-        </ul>
-        <div class="price">R$ 9,80</div>
-        <a href="{% url 'menu:personalizar' 'mcgonagall' %}" class="magical-btn">
-            🎩 Personalizar Poção
-        </a>
-    </div>
-
-    <div class="beverage-card" data-tipo="cha" data-casa="slytherin" data-preco="13.90">
-        <h3>🐍 Poção do Professor Snape</h3>
-        <div class="house-gem slytherin" style="margin: 0.5rem auto;"></div>
-        <p style="color: #3C2415;">
-            Um chá misterioso e complexo, com sabores profundos que revelam 
-            suas nuances lentamente, como as poções mais refinadas.
-        </p>
-        <ul class="ingredients-list">
-            <li>🍵 Chá preto das masmorras</li>
-            <li>🌿 Ervas raras e secretas</li>
-            <li>🔮 Essência de mistério</li>
-            <li>🖤 Um toque de elegância sombria</li>
-        </ul>
-        <div class="price">R$ 13,90</div>
-        <a href="{% url 'menu:personalizar' 'snape' %}" class="magical-btn">
-            🧪 Personalizar Poção
-        </a>
-    </div>
-
-    <!-- Poções Especiais -->
-    <div class="beverage-card" data-tipo="especial" data-casa="gryffindor" data-preco="15.50">
-        <h3>🔥 Firewhiskey Coffee</h3>
-        <div class="house-gem gryffindor" style="margin: 0.5rem auto;"></div>
-        <p style="color: #3C2415;">
-            Uma bebida corajosa para momentos especiais, com um toque picante 
-            que aquece o coração e desperta os sentidos.
-        </p>
-        <ul class="ingredients-list">
-            <li>☕ Café forte das Highlands</li>
-            <li>🔥 Essência de firewhiskey (sem álcool)</li>
-            <li>🌶️ Pitada de pimenta encantada</li>
-            <li>🍯 Mel dourado de abelhas mágicas</li>
-        </ul>
-        <div class="price">R$ 15,50</div>
-        <a href="{% url 'menu:personalizar' 'firewhiskey' %}" class="magical-btn">
-            🔥 Personalizar Poção
-        </a>
-    </div>
-
-    <div class="beverage-card" data-tipo="especial" data-casa="hufflepuff" data-preco="14.80">
-        <h3>🧚 Elixir da Felicidade</h3>
-        <div class="house-gem hufflepuff" style="margin: 0.5rem auto;"></div>
-        <p style="color: #3C2415;">
-            Uma bebida doce e reconfortante que traz alegria instantânea, 
-            perfeita para momentos que precisam de um pouquinho mais de magia.
-        </p>
-        <ul class="ingredients-list">
-            <li>☕ Café doce das fadas</li>
-            <li>🍓 Xarope de morango encantado</li>
-            <li>🥛 Chantilly das nuvens</li>
-            <li>✨ Polvilho mágico dourado</li>
-        </ul>
-        <div class="price">R$ 14,80</div>
-        <a href="{% url 'menu:personalizar' 'felicidade' %}" class="magical-btn">
-            🧚 Personalizar Poção
-        </a>
-    </div>
+    {% endfor %}
 </div>
 
 <!-- Ingredientes Extras -->
@@ -213,25 +98,25 @@
                     <div style="font-size: 2rem; margin-bottom: 0.5rem;">🥛</div>
                     <h6>Leites Encantados</h6>
                     <p style="font-size: 0.9rem;">Leite de aveia, amêndoas, coco ou tradicional</p>
-                    <span style="color: #D4AF37; font-weight: bold;">+R$ 1,50</span>
+                    <!-- <span style="color: #D4AF37; font-weight: bold;">+R$ 1,50</span> -->
                 </div>
                 <div class="col-md-3 text-center mb-3">
                     <div style="font-size: 2rem; margin-bottom: 0.5rem;">🍯</div>
                     <h6>Doçuras Mágicas</h6>
                     <p style="font-size: 0.9rem;">Açúcar cristal, mel, xarope de agave</p>
-                    <span style="color: #D4AF37; font-weight: bold;">+R$ 0,80</span>
+                    <!-- <span style="color: #D4AF37; font-weight: bold;">+R$ 0,80</span> -->
                 </div>
                 <div class="col-md-3 text-center mb-3">
                     <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌿</div>
                     <h6>Especiarias</h6>
                     <p style="font-size: 0.9rem;">Canela, cardamomo, baunilha, noz-moscada</p>
-                    <span style="color: #D4AF37; font-weight: bold;">+R$ 1,00</span>
+                    <!-- <span style="color: #D4AF37; font-weight: bold;">+R$ 1,00</span> -->
                 </div>
                 <div class="col-md-3 text-center mb-3">
                     <div style="font-size: 2rem; margin-bottom: 0.5rem;">✨</div>
                     <h6>Extras Especiais</h6>
                     <p style="font-size: 0.9rem;">Chantilly, marshmallow, chocolate</p>
-                    <span style="color: #D4AF37; font-weight: bold;">+R$ 2,00</span>
+                    <!-- <span style="color: #D4AF37; font-weight: bold;">+R$ 2,00</span> -->
                 </div>
             </div>
         </div>

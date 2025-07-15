@@ -3,6 +3,7 @@
 {% block title %}Cozinha Mágica - Expresso Patronum{% endblock %}
 
 {% block content %}
+{% csrf_token %}
 <div class="row">
     <div class="col-12">
         <div class="magical-card text-center">
@@ -454,84 +455,149 @@
 let soundEnabled = true;
 
 function startPreparing(orderId) {
-    const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
-    if (orderCard) {
-        // Move para coluna "Em Preparo"
-        orderCard.className = 'kitchen-order-card preparing';
-        orderCard.querySelector('.order-actions').innerHTML = `
-            <div class="progress mt-2 mb-2" style="height: 8px;">
-                <div class="progress-bar progress-bar-animated" style="width: 0%; background: linear-gradient(90deg, #0E1A40, #1E3A8A);"></div>
-            </div>
-            <button class="magical-btn" onclick="markReady('${orderId}')">
-                ✅ Marcar como Pronto
-            </button>
-        `;
-        
-        // Adiciona timer
-        const header = orderCard.querySelector('.order-header');
-        const timer = document.createElement('span');
-        timer.className = 'prep-timer';
-        timer.textContent = '0:00';
-        header.appendChild(timer);
-        
-        // Move para coluna correta
-        document.getElementById('preparing-orders').appendChild(orderCard);
-        
-        // Inicia timer visual
+    // Fazer chamada para a API
+    fetch(`/cozinha/api/iniciar-preparo/${orderId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
+            if (orderCard) {
+                // Move para coluna "Em Preparo"
+                orderCard.className = 'kitchen-order-card preparing';
+                orderCard.querySelector('.order-actions').innerHTML = `
+                    <div class="progress mt-2 mb-2" style="height: 8px;">
+                        <div class="progress-bar progress-bar-animated" style="width: 0%; background: linear-gradient(90deg, #0E1A40, #1E3A8A);"></div>
+                    </div>
+                    <button class="magical-btn" onclick="markReady('${orderId}')">
+                        ✅ Marcar como Pronto
+                    </button>
+                `;
+                
+                // Adiciona timer
+                const header = orderCard.querySelector('.order-header');
+                const timer = document.createElement('span');
+                timer.className = 'prep-timer';
+                timer.textContent = '0:00';
+                header.appendChild(timer);
+                
+                // Move para coluna correta
+                const preparingColumn = document.getElementById('preparing-orders');
+                if (preparingColumn) {
+                    preparingColumn.appendChild(orderCard);
+                }
+                
+                // Inicia timer visual
+                startTimer(orderId);
+                
+                showMagicalNotification(data.message, 'success');
+                addActivityLog(`🧙‍♂️ ${data.message}`);
+            }
+        } else {
+            showMagicalNotification(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMagicalNotification('Erro ao iniciar preparo!', 'error');
+    });
+}
         startTimer(orderId);
         
-        showMagicalNotification(`Preparo iniciado para pedido #${orderId}! 🧙‍♂️`, 'info');
-        addActivityLog(`🧙‍♂️ Pedido #${orderId} iniciado`);
-    }
-}
-
 function markReady(orderId) {
-    const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
-    if (orderCard) {
-        orderCard.className = 'kitchen-order-card ready sparkle';
-        orderCard.querySelector('.order-actions').innerHTML = `
-            <button class="magical-btn danger" onclick="markDelivered('${orderId}')">
-                🎉 Marcar como Entregue
-            </button>
-            <button class="magical-btn" onclick="callCustomer('${orderId}')" style="margin-top: 0.5rem;">
-                📢 Chamar Cliente
-            </button>
-        `;
-        
-        // Atualiza tempo
-        const timer = orderCard.querySelector('.prep-timer');
-        if (timer) {
-            timer.className = 'ready-time';
-            timer.textContent = 'Pronto agora';
+    // Fazer chamada para a API
+    fetch(`/cozinha/api/marcar-pronto/${orderId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json'
         }
-        
-        document.getElementById('ready-orders').appendChild(orderCard);
-        
-        showMagicalNotification(`Pedido #${orderId} está pronto! ✅`, 'success');
-        addActivityLog(`✅ Pedido #${orderId} finalizado e pronto para retirada`);
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
+            if (orderCard) {
+                orderCard.className = 'kitchen-order-card ready sparkle';
+                orderCard.querySelector('.order-actions').innerHTML = `
+                    <button class="magical-btn danger" onclick="markDelivered('${orderId}')">
+                        🎉 Marcar como Entregue
+                    </button>
+                    <button class="magical-btn" onclick="callCustomer('${orderId}')" style="margin-top: 0.5rem;">
+                        📢 Chamar Cliente
+                    </button>
+                `;
+                
+                // Atualiza tempo
+                const timer = orderCard.querySelector('.prep-timer');
+                if (timer) {
+                    timer.className = 'ready-time';
+                    timer.textContent = 'Pronto agora';
+                }
+                
+                const readyColumn = document.getElementById('ready-orders');
+                if (readyColumn) {
+                    readyColumn.appendChild(orderCard);
+                }
+                
+                showMagicalNotification(data.message, 'success');
+                addActivityLog(`✅ ${data.message}`);
+            }
+        } else {
+            showMagicalNotification(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMagicalNotification('Erro ao marcar como pronto!', 'error');
+    });
+}
         
         if (soundEnabled) {
             playNotificationSound();
         }
-    }
 }
 
 function markDelivered(orderId) {
-    const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
-    if (orderCard) {
-        orderCard.style.opacity = '0';
-        orderCard.style.transform = 'translateY(-20px)';
-        
-        setTimeout(() => {
-            orderCard.remove();
-        }, 500);
-        
-        showMagicalNotification(`Pedido #${orderId} entregue! 🎉`, 'success');
-        addActivityLog(`🎉 Pedido #${orderId} entregue ao cliente`);
-        
-        // Atualiza estatísticas
-        updateStatistics();
-    }
+    // Fazer chamada para a API
+    fetch(`/cozinha/api/marcar-entregue/${orderId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
+            if (orderCard) {
+                orderCard.style.opacity = '0';
+                orderCard.style.transform = 'translateY(-20px)';
+                
+                setTimeout(() => {
+                    orderCard.remove();
+                }, 500);
+            }
+            
+            showMagicalNotification(data.message, 'success');
+            addActivityLog(`🎉 ${data.message}`);
+            
+            // Atualiza estatísticas
+            updateStatistics();
+        } else {
+            showMagicalNotification(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMagicalNotification('Erro ao marcar como entregue!', 'error');
+    });
 }
 
 function callCustomer(orderId) {

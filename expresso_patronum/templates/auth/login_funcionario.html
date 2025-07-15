@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login Funcionário - Expresso Patronum{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container funcionario-theme">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h2 class="auth-title">👨‍🍳 Login Funcionário</h2>
+            <p class="auth-subtitle">Acesso ao painel da cozinha</p>
+        </div>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="username">
+                    <i class="fas fa-id-badge"></i> Usuário
+                </label>
+                <input 
+                    type="text" 
+                    name="username" 
+                    id="username" 
+                    required 
+                    placeholder="Digite seu nome de usuário"
+                    autocomplete="username"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i> Senha
+                </label>
+                <input 
+                    type="password" 
+                    name="password" 
+                    id="password" 
+                    required 
+                    placeholder="Digite sua senha"
+                    autocomplete="current-password"
+                >
+            </div>
+
+            <button type="submit" class="btn-submit funcionario-btn">
+                <i class="fas fa-sign-in-alt"></i> Acessar Painel
+            </button>
+        </form>
+
+        <div class="auth-divider">
+            <span>ou</span>
+        </div>
+
+        <div class="auth-links">
+            <p>É cliente?</p>
+            <a href="{% url 'auth:login_cliente' %}" class="btn-tertiary">
+                <i class="fas fa-user"></i> Login Cliente
+            </a>
+        </div>
+
+        <div class="auth-footer">
+            <a href="{% url 'menu:home' %}" class="btn-link">
+                <i class="fas fa-home"></i> Voltar ao Início
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Focus automático no primeiro campo
+    document.getElementById('username').focus();
+    
+    // Validação específica para funcionários
+    const form = document.querySelector('.auth-form');
+    const inputs = form.querySelectorAll('input[required]');
+    
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                this.classList.add('error');
+            } else {
+                this.classList.remove('error');
+            }
+        });
+        
+        input.addEventListener('input', function() {
+            this.classList.remove('error');
+        });
+    });
+    
+    // Adicionar aviso de segurança
+    const senhaInput = document.getElementById('password');
+    senhaInput.addEventListener('focus', function() {
+        if (!document.querySelector('.security-notice')) {
+            const notice = document.createElement('div');
+            notice.className = 'security-notice';
+            notice.innerHTML = '<i class="fas fa-shield-alt"></i> Área restrita - Use suas credenciais de funcionário';
+            this.parentNode.appendChild(notice);
+        }
+    });
+});
+</script>
+{% endblock %}

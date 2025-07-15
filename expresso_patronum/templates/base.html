@@ -26,10 +26,10 @@
             
             <!-- Gemas das Casas -->
             <div class="house-colors">
-                <span class="house-gem gryffindor sparkle"></span>
-                <span class="house-gem slytherin sparkle"></span>
-                <span class="house-gem ravenclaw sparkle"></span>
-                <span class="house-gem hufflepuff sparkle"></span>
+                <span title="Grifinória" style="font-size:2rem; margin:0 0.3rem;">🦁</span>
+                <span title="Sonserina" style="font-size:2rem; margin:0 0.3rem;">🐍</span>
+                <span title="Corvinal" style="font-size:2rem; margin:0 0.3rem;">🦅</span>
+                <span title="Lufa-Lufa" style="font-size:2rem; margin:0 0.3rem;">🦡</span>
             </div>
         </div>
     </header>
@@ -63,6 +63,42 @@
                             🧙‍♂️ Cozinha Mágica
                         </a>
                     </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #D4AF37; font-family: 'Cinzel', serif;">
+                                {% if user.is_staff %}
+                                    <i class="fas fa-crown"></i> Admin {{ user.first_name|default:user.username }}
+                                {% else %}
+                                    <i class="fas fa-user"></i> {{ user.first_name|default:user.username }}
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                {% if not user.is_staff %}
+                                    <li><a class="dropdown-item" href="{% url 'cliente:perfil' %}"><i class="fas fa-user-circle"></i> Meu Perfil</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'cliente:historico' %}"><i class="fas fa-history"></i> Histórico</a></li>
+                                {% endif %}
+                                {% if user.is_staff %}
+                                    <li><a class="dropdown-item" href="{% url 'cozinha:painel' %}"><i class="fas fa-utensils"></i> Painel Admin</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'auth:manage_users' %}"><i class="fas fa-users"></i> Gerenciar Usuários</a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'auth:logout' %}"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #D4AF37; font-family: 'Cinzel', serif;">
+                                <i class="fas fa-key"></i> Entrar
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="loginDropdown">
+                                <li><a class="dropdown-item" href="{% url 'auth:login_cliente' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'auth:register_cliente' %}"><i class="fas fa-user-plus"></i> Criar Conta</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

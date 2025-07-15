@@ -4,116 +4,65 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-12">
-        <div class="magical-card text-center">
-            <h2 style="font-family: 'Cinzel', serif; color: #8B0000; font-size: 2.5rem;">
-                🔮 Meus Pedidos Mágicos 🔮
-            </h2>
-            <p style="font-size: 1.2rem; color: #3C2415; margin-top: 1rem;">
-                Acompanhe suas poções desde o caldeirão até sua mesa!
-            </p>
-        </div>
-    </div>
-</div>
-
-<!-- Pedidos Ativos -->
-<div class="row mt-4">
-    <div class="col-12">
-        <h3 style="font-family: 'Cinzel', serif; color: #3C2415; margin-bottom: 1.5rem;">
-            ⚡ Pedidos em Andamento
-        </h3>
-    </div>
-</div>
 
 <div class="row">
-    <!-- Pedido 1 - Em Preparo -->
+    {% for pedido in pedidos_ativos %}
     <div class="col-md-6 mb-4">
-        <div class="magical-card" data-order-id="001">
+        <div class="magical-card" data-order-id="{{ pedido.id }}">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 style="color: #8B0000;">Pedido #001</h5>
-                <span class="status-badge status-preparo">Em Preparo</span>
+                <h5 style="color: #8B0000;">Pedido #{{ pedido.id }}</h5>
+                <span class="status-badge status-{{ pedido.status|lower }}">{{ pedido.status }}</span>
             </div>
-            
             <div class="order-details">
-                <h6 style="color: #3C2415;">🍺 Butterbeer Latte Personalizado</h6>
+                <h6 style="color: #3C2415;">{{ pedido.bebida }}</h6>
+                {% if pedido.ingredientes %}
                 <ul style="list-style: none; padding-left: 0; font-size: 0.9rem; color: #666;">
-                    <li>• Leite de Aveia</li>
-                    <li>• Canela Encantada</li>
-                    <li>• Chantilly das Nuvens</li>
-                    <li>• Sem Açúcar</li>
+                    {% for ing in pedido.ingredientes %}
+                        <li>• {{ ing }}</li>
+                    {% endfor %}
                 </ul>
-                
+                {% endif %}
                 <div class="row mt-3">
                     <div class="col-6">
-                        <strong style="color: #D4AF37;">Total: R$ 15,50</strong>
+                        <strong style="color: #D4AF37;">Total: R$ {{ pedido.preco|floatformat:2 }}</strong>
                     </div>
                     <div class="col-6 text-end">
-                        <small style="color: #666;">Pedido às 14:25</small>
+                        <small style="color: #666;">Pedido às {{ pedido.horario }}</small>
                     </div>
                 </div>
             </div>
-
             <div class="progress-bar-container mt-3">
                 <div class="progress" style="height: 8px; background: #E8E0D1;">
-                    <div class="progress-bar" style="width: 50%; background: linear-gradient(90deg, #0E1A40, #1E3A8A); transition: width 0.5s ease;"></div>
+                    <div class="progress-bar" style="width: {{ pedido.progresso }}%; background: linear-gradient(90deg, #0E1A40, #1E3A8A); transition: width 0.5s ease;"></div>
                 </div>
                 <div class="d-flex justify-content-between mt-2" style="font-size: 0.8rem;">
                     <span style="color: #FFD700;">✓ Recebido</span>
-                    <span style="color: #0E1A40;">🧙‍♂️ Em Preparo</span>
-                    <span style="color: #ccc;">Pronto</span>
+                    <span style="color: #0E1A40;">{% if pedido.status == 'Em preparo' %}🧙‍♂️ Em Preparo{% elif pedido.status == 'Recebido' %}Em Preparo{% else %}✓ Em Preparo{% endif %}</span>
+                    <span style="color: #2D5016;">{% if pedido.status == 'Pronto' %}🎉 Pronto{% else %}Pronto{% endif %}</span>
                     <span style="color: #ccc;">Entregue</span>
                 </div>
             </div>
-
             <div class="text-center mt-3">
-                <button class="magical-btn" onclick="trackOrder('001')">
+                <button class="magical-btn" onclick="trackOrder('{{ pedido.id }}')">
                     🔍 Rastrear Poção
                 </button>
+                <div class="mt-2">
+                    <button class="magical-btn" style="background: #DAA520; font-size: 0.9rem; padding: 0.5rem 1rem;" onclick="alterarPedido('{{ pedido.id }}')">
+                        ✏️ Alterar
+                    </button>
+                    <button class="magical-btn danger" style="font-size: 0.9rem; padding: 0.5rem 1rem; margin-left: 0.5rem;" onclick="cancelarPedido('{{ pedido.id }}')">
+                        ❌ Cancelar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Pedido 2 - Pronto -->
-    <div class="col-md-6 mb-4">
-        <div class="magical-card" data-order-id="002">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 style="color: #8B0000;">Pedido #002</h5>
-                <span class="status-badge status-pronto sparkle">Pronto</span>
-            </div>
-            
-            <div class="order-details">
-                <h6 style="color: #3C2415;">🦌 Patronus Espresso</h6>
-                <ul style="list-style: none; padding-left: 0; font-size: 0.9rem; color: #666;">
-                    <li>• Açúcar Cristal</li>
-                    <li>• Duplo</li>
-                </ul>
-                
-                <div class="row mt-3">
-                    <div class="col-6">
-                        <strong style="color: #D4AF37;">Total: R$ 9,40</strong>
-                    </div>
-                    <div class="col-6 text-end">
-                        <small style="color: #666;">Pedido às 14:18</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="progress-bar-container mt-3">
-                <div class="progress" style="height: 8px; background: #E8E0D1;">
-                    <div class="progress-bar" style="width: 75%; background: linear-gradient(90deg, #2D5016, #16A085); transition: width 0.5s ease;"></div>
-                </div>
-                <div class="d-flex justify-content-between mt-2" style="font-size: 0.8rem;">
-                    <span style="color: #FFD700;">✓ Recebido</span>
-                    <span style="color: #0E1A40;">✓ Em Preparo</span>
-                    <span style="color: #2D5016;">🎉 Pronto</span>
-                    <span style="color: #ccc;">Entregue</span>
-                </div>
-            </div>
-
-            <div class="text-center mt-3">
-                <button class="magical-btn success" onclick="confirmPickup('002')">
-                    ✨ Confirmar Retirada
-                </button>
+    {% empty %}
+    <div class="col-12 text-center">
+        <p style="color: #666; font-size: 1.1rem;">Nenhum pedido em andamento.</p>
+    </div>
+    {% endfor %}
+</div>
             </div>
         </div>
     </div>
@@ -127,6 +76,7 @@
         </h3>
     </div>
 </div>
+
 
 <div class="row">
     <div class="col-12">
@@ -144,42 +94,24 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for pedido in historico %}
                         <tr>
-                            <td><strong>#003</strong></td>
-                            <td>🐱 Chá da Prof. McGonagall</td>
-                            <td>01/07/2025</td>
-                            <td style="color: #D4AF37;"><strong>R$ 10,80</strong></td>
-                            <td><span class="status-badge status-entregue">Entregue</span></td>
+                            <td><strong>#{{ pedido.id }}</strong></td>
+                            <td>{{ pedido.bebida }}</td>
+                            <td>{{ pedido.data }}</td>
+                            <td style="color: #D4AF37;"><strong>R$ {{ pedido.preco|floatformat:2 }}</strong></td>
+                            <td><span class="status-badge status-entregue">{{ pedido.status }}</span></td>
                             <td>
-                                <button class="btn btn-sm magical-btn" onclick="reorderItem('003')">
+                                <button class="btn btn-sm magical-btn" onclick="reorderItem('{{ pedido.id }}')">
                                     🔄 Repetir
                                 </button>
                             </td>
                         </tr>
+                        {% empty %}
                         <tr>
-                            <td><strong>#004</strong></td>
-                            <td>🔥 Firewhiskey Coffee</td>
-                            <td>30/06/2025</td>
-                            <td style="color: #D4AF37;"><strong>R$ 15,50</strong></td>
-                            <td><span class="status-badge status-entregue">Entregue</span></td>
-                            <td>
-                                <button class="btn btn-sm magical-btn" onclick="reorderItem('004')">
-                                    🔄 Repetir
-                                </button>
-                            </td>
+                            <td colspan="6" class="text-center" style="color: #666;">Nenhum pedido histórico encontrado.</td>
                         </tr>
-                        <tr>
-                            <td><strong>#005</strong></td>
-                            <td>🧚 Elixir da Felicidade</td>
-                            <td>29/06/2025</td>
-                            <td style="color: #D4AF37;"><strong>R$ 16,80</strong></td>
-                            <td><span class="status-badge status-entregue">Entregue</span></td>
-                            <td>
-                                <button class="btn btn-sm magical-btn" onclick="reorderItem('005')">
-                                    🔄 Repetir
-                                </button>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -204,6 +136,9 @@
                 <a href="{% url 'pedido:pagamento' %}" class="magical-btn success">
                     💰 Finalizar Pedido
                 </a>
+                <button class="magical-btn" style="background: #DAA520;" onclick="mostrarHistorico()">
+                    📜 Ver Histórico de Comandos
+                </button>
             </div>
         </div>
     </div>
@@ -263,6 +198,120 @@
         </div>
     </div>
 </div>
+
+<!-- Modal para Alterar Pedido (Command Pattern) -->
+<div class="modal fade" id="alterar-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background: #F4F1E8; border: 2px solid #D4AF37;">
+            <div class="modal-header" style="border-color: #D4AF37;">
+                <h5 class="modal-title" style="font-family: 'Cinzel', serif; color: #8B0000;">
+                    ✏️ Alterar Pedido Mágico
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="alterar-form">
+                    <div class="mb-3">
+                        <label class="form-label" style="color: #3C2415; font-weight: bold;">🧙‍♂️ Nome do Bruxo/Bruxa:</label>
+                        <input type="text" class="form-control" id="novo-cliente" placeholder="Novo nome...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="color: #3C2415; font-weight: bold;">📝 Novas Instruções Especiais:</label>
+                        <textarea class="form-control" id="novas-observacoes" rows="3" 
+                                  placeholder="Ex: 'Mais doce', 'Extra quente', 'Sem açúcar'..."></textarea>
+                    </div>
+                    <div class="alert" style="background: rgba(212, 175, 55, 0.1); border: 1px solid #D4AF37; color: #8B0000;">
+                        <small>
+                            <strong>⚠️ Atenção:</strong> Pedidos em preparo não podem ser alterados. 
+                            Apenas pedidos "Recebidos" permitem alterações.
+                        </small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-color: #D4AF37;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="magical-btn" onclick="confirmarAlteracao()">
+                    ✨ Alterar Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Cancelar Pedido (Command Pattern) -->
+<div class="modal fade" id="cancelar-modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background: #F4F1E8; border: 2px solid #DC3545;">
+            <div class="modal-header" style="border-color: #DC3545;">
+                <h5 class="modal-title" style="font-family: 'Cinzel', serif; color: #DC3545;">
+                    ❌ Cancelar Pedido Mágico
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <div style="font-size: 3rem;">😢</div>
+                    <h6 style="color: #8B0000;">Tem certeza que deseja cancelar este pedido?</h6>
+                </div>
+                <form id="cancelar-form">
+                    <div class="mb-3">
+                        <label class="form-label" style="color: #3C2415; font-weight: bold;">💭 Motivo do cancelamento (opcional):</label>
+                        <select class="form-control" id="motivo-cancelamento">
+                            <option value="Mudei de ideia">Mudei de ideia</option>
+                            <option value="Demora no preparo">Demora no preparo</option>
+                            <option value="Problema financeiro">Problema financeiro</option>
+                            <option value="Outro">Outro motivo</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" id="motivo-detalhado" rows="2" 
+                                  placeholder="Detalhes adicionais (opcional)..."></textarea>
+                    </div>
+                    <div class="alert alert-warning">
+                        <small>
+                            <strong>ℹ️ Importante:</strong> O cancelamento pode ser desfeito usando o histórico de comandos. 
+                            Pedidos já entregues não podem ser cancelados.
+                        </small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-color: #DC3545;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+                <button type="button" class="btn btn-danger" onclick="confirmarCancelamento()">
+                    💔 Sim, Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Histórico de Comandos -->
+<div class="modal fade" id="historico-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: #F4F1E8; border: 2px solid #D4AF37;">
+            <div class="modal-header" style="border-color: #D4AF37;">
+                <h5 class="modal-title" style="font-family: 'Cinzel', serif; color: #8B0000;">
+                    📜 Histórico de Comandos Mágicos
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center mb-3">
+                    <button class="magical-btn" onclick="desfazerComando()" style="margin-right: 0.5rem;">
+                        ↩️ Desfazer
+                    </button>
+                    <button class="magical-btn" onclick="refazerComando()">
+                        ↪️ Refazer
+                    </button>
+                </div>
+                <div id="historico-lista" style="max-height: 300px; overflow-y: auto;">
+                    <!-- Lista será preenchida via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_css %}
@@ -367,6 +416,230 @@ function confirmPickup(orderId) {
 function reorderItem(orderId) {
     showMagicalNotification('Preparando a mesma poção deliciosa! 🧙‍♂️', 'success');
     // Aqui seria feita a lógica para repetir o pedido
+}
+
+function alterarPedido(orderId) {
+    // Preencher dados atuais do pedido no modal
+    document.getElementById('novo-cliente').value = ''; // Limpar para permitir novo nome
+    document.getElementById('novas-observacoes').value = ''; // Limpar para novas observações
+    
+    // Armazenar ID do pedido para uso posterior
+    window.currentPedidoId = orderId;
+    
+    const modal = new bootstrap.Modal(document.getElementById('alterar-modal'));
+    modal.show();
+}
+
+function cancelarPedido(orderId) {
+    // Armazenar ID do pedido para cancelamento
+    window.currentPedidoId = orderId;
+    
+    const modal = new bootstrap.Modal(document.getElementById('cancelar-modal'));
+    modal.show();
+}
+
+function confirmarAlteracao() {
+    const novoCliente = document.getElementById('novo-cliente').value;
+    const novasObservacoes = document.getElementById('novas-observacoes').value;
+    
+    if (!novoCliente && !novasObservacoes) {
+        showMagicalNotification('Por favor, preencha pelo menos um campo para alterar! 📝', 'warning');
+        return;
+    }
+    
+    // Fazer chamada para API de alteração
+    const formData = new FormData();
+    if (novoCliente) formData.append('novo_cliente', novoCliente);
+    if (novasObservacoes) formData.append('novas_observacoes', novasObservacoes);
+    
+    fetch(`/pedido/api/alterar-pedido/${window.currentPedidoId}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showMagicalNotification(data.message, 'success');
+            
+            // Fechar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('alterar-modal'));
+            modal.hide();
+            
+            // Recarregar página para mostrar alterações
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showMagicalNotification(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMagicalNotification('Erro ao alterar pedido! Tente novamente.', 'error');
+    });
+}
+
+function confirmarCancelamento() {
+    const motivo = document.getElementById('motivo-cancelamento').value;
+    const motivoDetalhado = document.getElementById('motivo-detalhado').value;
+    
+    let motivoCompleto = motivo;
+    if (motivoDetalhado) {
+        motivoCompleto += ` - ${motivoDetalhado}`;
+    }
+    
+    // Fazer chamada para API de cancelamento
+    const formData = new FormData();
+    formData.append('motivo', motivoCompleto);
+    
+    fetch(`/pedido/api/cancelar-pedido/${window.currentPedidoId}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showMagicalNotification(data.message, 'success');
+            
+            // Fechar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('cancelar-modal'));
+            modal.hide();
+            
+            // Atualizar visualmente o pedido
+            const orderCard = document.querySelector(`[data-order-id="${window.currentPedidoId}"]`);
+            if (orderCard) {
+                const statusBadge = orderCard.querySelector('.status-badge');
+                if (statusBadge) {
+                    statusBadge.className = 'status-badge';
+                    statusBadge.style.background = '#dc3545';
+                    statusBadge.style.color = 'white';
+                    statusBadge.textContent = 'Cancelado';
+                }
+                
+                // Adicionar visual de cancelado
+                orderCard.style.opacity = '0.7';
+                orderCard.style.borderColor = '#dc3545';
+            }
+            
+            // Recarregar página após 2 segundos
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            showMagicalNotification(data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMagicalNotification('Erro ao cancelar pedido! Tente novamente.', 'error');
+    });
+}
+
+function desfazerComando() {
+    fetch('/pedido/api/desfazer/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showMagicalNotification(`↩️ ${data.message}`, 'success');
+            atualizarHistorico();
+            
+            // Recarregar página para mostrar mudanças
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showMagicalNotification(data.message, 'warning');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMagicalNotification('Erro ao desfazer comando!', 'error');
+    });
+}
+
+function refazerComando() {
+    fetch('/pedido/api/refazer/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showMagicalNotification(`↪️ ${data.message}`, 'success');
+            atualizarHistorico();
+            
+            // Recarregar página para mostrar mudanças
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showMagicalNotification(data.message, 'warning');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showMagicalNotification('Erro ao refazer comando!', 'error');
+    });
+}
+
+function atualizarHistorico() {
+    fetch('/pedido/api/historico/')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const lista = document.getElementById('historico-lista');
+            lista.innerHTML = '';
+            
+            if (data.historico.length === 0) {
+                lista.innerHTML = '<p class="text-center" style="color: #666;">Nenhum comando executado ainda</p>';
+                return;
+            }
+            
+            data.historico.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'p-2 mb-2 rounded';
+                div.style.background = item.executado ? 'rgba(45, 80, 22, 0.1)' : 'rgba(220, 53, 69, 0.1)';
+                div.style.border = `1px solid ${item.executado ? '#2D5016' : '#dc3545'}`;
+                
+                const status = item.executado ? '✅ Executado' : '❌ Desfeito';
+                const icon = getCommandIcon(item.tipo);
+                
+                div.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span><strong>${index + 1}. ${icon} ${item.tipo}</strong></span>
+                        <span style="font-size: 0.9rem;">${status}</span>
+                    </div>
+                `;
+                
+                lista.appendChild(div);
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function getCommandIcon(commandType) {
+    const icons = {
+        'FazerPedidoCommand': '🆕',
+        'AlterarPedidoCommand': '✏️',
+        'CancelarPedidoCommand': '❌'
+    };
+    return icons[commandType] || '⚡';
+}
+
+function mostrarHistorico() {
+    atualizarHistorico();
+    const modal = new bootstrap.Modal(document.getElementById('historico-modal'));
+    modal.show();
 }
 
 // Simulação de atualizações em tempo real

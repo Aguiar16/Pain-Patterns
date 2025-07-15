@@ -1,3 +1,66 @@
+/* Grid para ingredientes em duas colunas */
+.ingredientes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.ingredientes-grid .form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.2rem;
+    min-height: 32px;
+}
+
+.ingredientes-grid .form-check-label {
+    font-size: 1.08rem;
+    margin-bottom: 0;
+    margin-left: 2px;
+    line-height: 1.2;
+}
+
+/* Estilos para dropdown menu - garantir que apareça acima da magical-card */
+.navbar {
+    position: relative;
+    z-index: 1040;
+}
+
+.navbar-nav .dropdown {
+    position: relative;
+    z-index: 1050;
+}
+
+.navbar-nav .dropdown-menu {
+    position: absolute;
+    z-index: 1050;
+    background: rgba(244, 241, 232, 0.98);
+    border: 2px solid var(--bronze);
+    border-radius: 10px;
+    box-shadow: 
+        0 8px 32px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+    backdrop-filter: blur(15px);
+    margin-top: 0.5rem;
+}
+
+.navbar-nav .dropdown-item {
+    color: var(--dark-brown);
+    font-family: 'Crimson Text', serif;
+    padding: 0.75rem 1.25rem;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-nav .dropdown-item:hover {
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--dark-brown);
+}
+
+.navbar-nav .dropdown-divider {
+    border-color: var(--bronze);
+    opacity: 0.5;
+}
+
 /* Estilo Harry Potter para Expresso Patronum */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
 
@@ -85,6 +148,8 @@ body {
         inset 0 1px 0 rgba(255,255,255,0.4);
     backdrop-filter: blur(10px);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .magical-card:hover {
@@ -326,4 +391,14 @@ body {
     .magical-card {
         padding: 1rem;
     }
+}
+
+/* Ajuste de largura dos checkboxes de ingredientes */
+input[type="checkbox"].ingredient-checkbox,
+.form-check-input.ingredient-checkbox {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--gryffindor-gold);
+    margin-right: 8px;
+    vertical-align: middle;
 }

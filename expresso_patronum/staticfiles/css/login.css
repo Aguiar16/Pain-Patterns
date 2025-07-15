@@ -1,0 +1,56 @@
+/* Estilo especial para página de login */
+.login-container {
+    max-width: 400px;
+    margin: 60px auto 0 auto;
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(60,36,21,0.15);
+    padding: 32px 28px;
+    font-family: 'Cinzel', serif;
+    border: 2px solid #D4AF37;
+}
+.login-container h2 {
+    text-align: center;
+    color: #D4AF37;
+    margin-bottom: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.login-container label {
+    color: #3c2415;
+    font-weight: 600;
+    margin-top: 12px;
+}
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    border: 1px solid #D4AF37;
+    background: #f8f5f0;
+    font-size: 1rem;
+    font-family: 'Crimson Text', serif;
+    text-transform: none;
+}
+.login-container button {
+    width: 100%;
+    background: linear-gradient(90deg, #D4AF37 60%, #f8f5f0 100%);
+    color: #3c2415;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(60,36,21,0.08);
+    transition: background 0.2s;
+}
+.login-container button:hover {
+    background: linear-gradient(90deg, #f8f5f0 0%, #D4AF37 100%);
+    color: #D4AF37;
+}
+.login-container p[style] {
+    text-align: center;
+    margin-top: 12px;
+    font-weight: 600;
+}

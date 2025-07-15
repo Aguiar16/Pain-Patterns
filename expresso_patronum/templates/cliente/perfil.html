@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Meu Perfil - Expresso Patronum{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<link rel="stylesheet" href="{% static 'css/cliente-perfil.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if not error %}
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {{ user.first_name|first|default:user.username|first|upper }}
+            </div>
+            <h1 class="profile-name">{{ user.get_full_name|default:user.username }}</h1>
+            <p class="profile-house">
+                {% if cliente.casa_hogwarts %}
+                    {{ cliente.get_casa_hogwarts_display }}
+                {% else %}
+                    Casa não definida
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="profile-content">
+            <!-- Estatísticas -->
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value">{{ cliente.pontos_fidelidade }}</div>
+                    <div class="stat-label">Pontos de Fidelidade</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">{{ cliente.pedidos_realizados }}</div>
+                    <div class="stat-label">Pedidos Realizados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">R$ {{ cliente.total_gasto|floatformat:2 }}</div>
+                    <div class="stat-label">Total Gasto</div>
+                </div>
+            </div>
+
+            <!-- Sistema de Fidelidade -->
+            <div class="fidelity-section">
+                <h3><i class="fas fa-crown"></i> Sistema de Fidelidade</h3>
+                
+                <div class="fidelity-level">
+                    <span class="level-badge level-{{ cliente.nivel_fidelidade }}">
+                        {{ cliente.get_nivel_fidelidade_display }}
+                    </span>
+                    {% if progresso.porcentagem < 100 %}
+                        <span>Próximo nível em R$ {{ progresso.proximo|floatformat:2 }}</span>
+                    {% else %}
+                        <span>Nível máximo atingido!</span>
+                    {% endif %}
+                </div>
+
+                {% if progresso.porcentagem < 100 %}
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ progresso.porcentagem }}%"></div>
+                    </div>
+                    <div class="progress-text">
+                        R$ {{ progresso.atual|floatformat:2 }} de R$ {{ progresso.proximo|floatformat:2 }}
+                        ({{ progresso.porcentagem|floatformat:1 }}%)
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Badges/Conquistas -->
+            <div class="badges-section">
+                <h3><i class="fas fa-trophy"></i> Suas Conquistas</h3>
+                
+                {% if badges %}
+                    <div class="badges-grid">
+                        {% for badge in badges %}
+                            <div class="badge-item">
+                                <div class="badge-icon">{{ badge.icone }}</div>
+                                <div class="badge-name">{{ badge.nome }}</div>
+                                <div class="badge-description">{{ badge.descricao }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-medal" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
+                        <p>Você ainda não tem conquistas. Continue fazendo pedidos para ganhar badges!</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Ações -->
+            <div class="actions-section">
+                <a href="{% url 'cliente:historico' %}" class="btn-profile">
+                    <i class="fas fa-history"></i> Ver Histórico
+                </a>
+                <a href="{% url 'menu:cardapio' %}" class="btn-profile">
+                    <i class="fas fa-coffee"></i> Fazer Pedido
+                </a>
+                <a href="{% url 'pedido:meus_pedidos' %}" class="btn-profile">
+                    <i class="fas fa-list"></i> Meus Pedidos
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <div class="profile-content">
+            <div class="empty-state">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+                <h3>Erro ao carregar perfil</h3>
+                <p>Ocorreu um erro ao carregar seus dados. Tente recarregar a página.</p>
+                <a href="{% url 'cliente:perfil' %}" class="btn-profile">
+                    <i class="fas fa-refresh"></i> Recarregar
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+// Animação para os números das estatísticas
+document.addEventListener('DOMContentLoaded', function() {
+    const statValues = document.querySelectorAll('.stat-value');
+    
+    statValues.forEach(stat => {
+        const finalValue = parseInt(stat.textContent) || parseFloat(stat.textContent) || 0;
+        let currentValue = 0;
+        const increment = finalValue / 50;
+        const timer = setInterval(() => {
+            currentValue += increment;
+            if (currentValue >= finalValue) {
+                stat.textContent = finalValue;
+                clearInterval(timer);
+            } else {
+                stat.textContent = Math.floor(currentValue);
+            }
+        }, 30);
+    });
+});
+</script>
+{% endblock %}

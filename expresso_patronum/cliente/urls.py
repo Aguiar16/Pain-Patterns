@@ -6,4 +6,5 @@ app_name = 'cliente'
 urlpatterns = [
     path('perfil/', views.perfil, name='perfil'),
     path('historico/', views.historico, name='historico'),
+    path('api/atualizar-perfil/', views.atualizar_perfil, name='atualizar_perfil'),
 ]
